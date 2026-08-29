@@ -1,0 +1,1103 @@
+:host {
+  display: block;
+}
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.preview-page {
+  width: 100%;
+  max-width: 1250px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.preview-header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 26px;
+}
+
+
+.preview-heading {
+  min-width: 0;
+}
+
+
+.preview-eyebrow {
+  display: inline-flex;
+
+  align-items: center;
+
+  margin-bottom: 9px;
+
+  color: #7180bd;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.14em;
+}
+
+
+.preview-heading h1 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: clamp(30px, 3vw, 42px);
+
+  line-height: 1.08;
+
+  font-weight: 800;
+
+  letter-spacing: -1.6px;
+
+  text-shadow:
+          0 3px 15px rgba(80, 90, 130, 0.08);
+}
+
+
+.preview-heading p {
+  max-width: 650px;
+
+  margin: 10px 0 0;
+
+  color: #69778d;
+
+  font-size: 14px;
+
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   HEADER ACTIONS
+   ========================================================= */
+
+.header-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+
+/* PrimeNG buttons */
+
+:host ::ng-deep .header-btn {
+  height: 42px !important;
+
+  border-radius: 11px !important;
+
+  font-size: 12px !important;
+
+  font-weight: 750 !important;
+}
+
+
+:host ::ng-deep .export-btn {
+  background:
+          linear-gradient(
+                  135deg,
+                  #5b8cff,
+                  #806cf2
+          ) !important;
+
+  border: none !important;
+
+  box-shadow:
+          0 9px 22px rgba(95, 113, 230, 0.22);
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+   ========================================================= */
+
+.preview-layout {
+  display: grid;
+
+  grid-template-columns: 235px minmax(0, 1fr);
+
+  gap: 38px;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.slides-sidebar {
+  display: flex;
+
+  flex-direction: column;
+
+  min-height: 650px;
+  max-height: 750px;
+
+  border-radius: 20px;
+
+  background:
+          linear-gradient(
+                  145deg,
+                  rgba(255, 255, 255, 0.97),
+                  rgba(248, 250, 255, 0.94)
+          );
+
+  border: 1px solid #e5e9f0;
+  box-shadow:
+          20px -20px 45px rgba(255, 79, 145,0.07),
+          30px 0px 50px rgba(255, 159, 67,  0.07),
+          20px 25px 45px rgba(255, 212, 92, 0.10),
+          0px 30px 55px rgba(67, 217, 255,  0.10),
+          -20px 25px 45px rgba(99, 123, 255,0.10),
+          -25px -10px 50px rgba(197, 108, 255,0.07);
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   SIDEBAR HEADER
+   ========================================================= */
+
+.sidebar-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px 17px 14px;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+
+.sidebar-header > div {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+.sidebar-title {
+  color: #303a4d;
+
+  font-size: 13px;
+
+  font-weight: 800;
+}
+
+
+.sidebar-count {
+  min-width: 22px;
+  height: 22px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: #f0f3ff;
+
+  color: #7181d9;
+
+  font-size: 10px;
+
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   SLIDES LIST
+   ========================================================= */
+
+.slides-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+  padding: 12px;
+
+  overflow-y: auto;
+}
+
+
+.slides-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+
+.slides-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.slides-list::-webkit-scrollbar-thumb {
+  background: #dce2ec;
+
+  border-radius: 10px;
+}
+
+
+/* =========================================================
+   SLIDE THUMB
+   ========================================================= */
+
+.slide-thumb {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 52px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 9px 10px;
+
+  border-radius: 12px;
+
+  border: 1px solid transparent;
+
+  background: rgba(255, 255, 255, 0.55);
+
+  color: #758197;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+          transform 0.18s ease,
+          background 0.18s ease,
+          border-color 0.18s ease,
+          box-shadow 0.18s ease;
+}
+
+
+.slide-thumb:hover {
+  transform: translateX(2px);
+
+  background: #fff;
+
+  border-color: #e1e6ef;
+
+  box-shadow:
+          0 7px 17px rgba(70, 90, 120, 0.06);
+}
+
+
+/* Active */
+
+.slide-thumb.active {
+  background:
+          linear-gradient(
+                  135deg,
+                  rgba(91, 140, 255, 0.10),
+                  rgba(197, 108, 255, 0.10)
+          );
+
+  border-color: rgba(105, 120, 220, 0.20);
+
+  color: #5969c9;
+
+  box-shadow:
+          0 7px 18px rgba(90, 110, 220, 0.09);
+}
+
+
+.slide-thumb.active::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  top: 9px;
+  bottom: 9px;
+
+  width: 3px;
+
+  border-radius: 0 4px 4px 0;
+
+  background:
+          linear-gradient(
+                  180deg,
+                  #5b8cff,
+                  #a06ce8
+          );
+}
+
+
+/* =========================================================
+   THUMB NUMBER
+   ========================================================= */
+
+.thumb-number {
+  width: 27px;
+  height: 27px;
+
+  flex-shrink: 0;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 8px;
+
+  background: #f1f3f7;
+
+  color: #8a95a7;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  transition:
+          background 0.18s ease,
+          color 0.18s ease;
+}
+
+
+.slide-thumb.active .thumb-number {
+  background:
+          linear-gradient(
+                  135deg,
+                  #5b8cff,
+                  #806cf2
+          );
+
+  color: white;
+}
+
+
+/* =========================================================
+   THUMB LABEL
+   ========================================================= */
+
+.thumb-info {
+  min-width: 0;
+
+  flex: 1;
+}
+
+
+.thumb-label {
+  display: block;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+
+  color: inherit;
+
+  font-size: 11px;
+
+  font-weight: 650;
+}
+
+
+/* =========================================================
+   PREVIEW WORKSPACE
+   ========================================================= */
+
+.preview-workspace {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding: 28px;
+
+  border-radius: 24px;
+
+  background:
+          linear-gradient(
+                  145deg,
+                  rgba(255, 255, 255, 0.97),
+                  rgba(248, 250, 255, 0.94)
+          );
+
+  border: 1px solid #e5e9f0;
+  box-shadow:
+          20px -20px 45px rgba(255, 79, 145,0.07),
+          30px 0px 50px rgba(255, 159, 67,  0.07),
+          20px 25px 45px rgba(255, 212, 92, 0.10),
+          0px 30px 55px rgba(67, 217, 255,  0.10),
+          -20px 25px 45px rgba(99, 123, 255,0.10),
+          -25px -10px 50px rgba(197, 108, 255,0.07);
+}
+
+
+/* =========================================================
+   SLIDE CONTAINER
+   ========================================================= */
+
+.slide-container {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 515px;
+
+  flex: 1;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 28px;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  background:
+          radial-gradient(
+                  circle at 10% 10%,
+                  rgba(91, 140, 255, 0.07),
+                  transparent 30%
+          ),
+          radial-gradient(
+                  circle at 90% 90%,
+                  rgba(197, 108, 255, 0.07),
+                  transparent 30%
+          ),
+          #f5f7fb;
+
+  box-shadow:
+          20px -20px 45px rgba(255, 79, 145,0.07),
+          30px 0px 50px rgba(255, 159, 67,  0.07),
+          20px 25px 45px rgba(255, 212, 92, 0.10),
+          0px 30px 55px rgba(67, 217, 255,  0.10),
+          -20px 25px 45px rgba(99, 123, 255,0.10),
+          -25px -10px 50px rgba(197, 108, 255,0.07);}
+
+
+/* =========================================================
+   SLIDE FRAME
+   ========================================================= */
+
+.slide-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   ACTUAL GENERATED SLIDE
+   ========================================================= */
+
+.slide-inner {
+  position: relative;
+  width: 100%;
+  min-width: 1280px;
+  transform-origin: center center;
+
+  border-radius: 8px;
+
+  background: #fff;
+
+  overflow: hidden;
+
+  box-shadow:
+          0 22px 55px rgba(35, 50, 80, 0.16),
+          0 5px 15px rgba(35, 50, 80, 0.08);
+
+  transition:
+          transform 0.25s ease;
+}
+
+
+
+.empty-slide {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  color: #929daf;
+
+  font-size: 13px;
+}
+
+
+.empty-icon {
+  width: 48px;
+  height: 48px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 14px;
+
+  background:
+          linear-gradient(
+                  135deg,
+                  rgba(91, 140, 255, 0.10),
+                  rgba(197, 108, 255, 0.10)
+          );
+
+  color: #7181d9;
+
+  font-size: 21px;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.slide-navigation {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 18px;
+
+  padding: 15px 0 2px;
+}
+
+
+:host ::ng-deep .navigation-btn {
+  height: 38px !important;
+
+  min-width: 95px;
+
+  border-radius: 10px !important;
+
+  font-size: 11px !important;
+
+  font-weight: 700 !important;
+}
+
+
+.slide-counter {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  min-width: 65px;
+
+  color: #8a95a7;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+
+.current-number {
+  color: #5969c9;
+
+  font-weight: 850;
+}
+
+
+.counter-separator {
+  color: #b3bac6;
+}
+
+
+/* =========================================================
+   REGENERATION CARD
+   ========================================================= */
+
+.regeneration-card {
+  margin-top: 15px;
+
+  padding: 15px;
+
+  border-radius: 16px;
+
+  background:
+          linear-gradient(
+                  145deg,
+                  rgba(255, 255, 255, 0.94),
+                  rgba(248, 250, 255, 0.92)
+          );
+
+  border: 1px solid #e5e9f0;
+
+  box-shadow:
+          0 7px 20px rgba(70, 90, 120, 0.04);
+}
+
+
+/* =========================================================
+   REGEN HEADER
+   ========================================================= */
+
+.regeneration-header {
+  margin-bottom: 11px;
+}
+
+
+.regeneration-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+.regeneration-icon {
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 9px;
+
+  background:
+          linear-gradient(
+                  135deg,
+                  rgba(91, 140, 255, 0.11),
+                  rgba(197, 108, 255, 0.11)
+          );
+
+  color: #756bd1;
+
+  font-size: 15px;
+}
+
+
+.regeneration-title strong {
+  display: block;
+
+  margin-bottom: 2px;
+
+  color: #303a4d;
+
+  font-size: 12px;
+
+  font-weight: 800;
+}
+
+
+.regeneration-title span:not(.regeneration-icon) {
+  display: block;
+
+  color: #929cab;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   REGEN FORM
+   ========================================================= */
+
+.regeneration-form {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+}
+
+
+.regen-input-wrapper {
+  position: relative;
+
+  flex: 1;
+
+  min-width: 0;
+}
+
+
+.regen-input-icon {
+  position: absolute;
+
+  left: 13px;
+  top: 50%;
+
+  z-index: 2;
+
+  transform: translateY(-50%);
+
+  color: #7b70d9;
+
+  font-size: 14px;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   PRIMENG INPUT
+   ========================================================= */
+
+:host ::ng-deep .regen-input {
+  width: 100% !important;
+
+  height: 42px !important;
+
+  padding-left: 36px !important;
+  padding-right: 13px !important;
+
+  border-radius: 11px !important;
+
+  border: 1px solid #e1e6ee !important;
+
+  background: #fff !important;
+
+  color: #344056 !important;
+
+  font-size: 12px !important;
+
+  box-shadow: none !important;
+
+  transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease !important;
+}
+
+
+:host ::ng-deep .regen-input::placeholder {
+  color: #a0a9b8;
+}
+
+
+:host ::ng-deep .regen-input:hover {
+  border-color: #d3dae6 !important;
+}
+
+
+:host ::ng-deep .regen-input:focus {
+  border-color: rgba(111, 119, 210, 0.55) !important;
+
+  box-shadow:
+          0 0 0 3px rgba(111, 119, 210, 0.08) !important;
+
+  outline: none !important;
+}
+
+
+/* =========================================================
+   REGENERATE BUTTON
+   ========================================================= */
+
+:host ::ng-deep .regenerate-button {
+  flex-shrink: 0;
+
+  min-width: 155px;
+
+  height: 42px !important;
+
+  border-radius: 11px !important;
+
+  background:
+          linear-gradient(
+                  135deg,
+                  #5b8cff,
+                  #806cf2
+          ) !important;
+
+  border: none !important;
+
+  box-shadow:
+          0 8px 20px rgba(95, 113, 230, 0.20);
+
+  font-size: 11px !important;
+
+  font-weight: 750 !important;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.error-message {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  margin-top: 15px;
+
+  padding: 12px 14px;
+
+  border-radius: 11px;
+
+  background: rgba(240, 90, 100, 0.07);
+
+  border: 1px solid rgba(240, 90, 100, 0.15);
+
+  color: #d85662;
+
+  font-size: 12px;
+}
+
+
+.error-icon {
+  width: 21px;
+  height: 21px;
+
+  flex-shrink: 0;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 7px;
+
+  background: rgba(216, 86, 98, 0.10);
+
+  font-size: 11px;
+
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   EMPTY PAGE
+   ========================================================= */
+
+.empty-page {
+  min-height: 500px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+
+.empty-card {
+  width: min(500px, 100%);
+
+  padding: 45px 35px;
+
+  text-align: center;
+
+  border-radius: 24px;
+
+  background:
+          linear-gradient(
+                  145deg,
+                  rgba(255, 255, 255, 0.97),
+                  rgba(248, 250, 255, 0.94)
+          );
+
+  border: 1px solid #e5e9f0;
+
+  box-shadow:
+          0 18px 45px rgba(70, 90, 120, 0.07);
+}
+
+
+.empty-card-icon {
+  width: 55px;
+  height: 55px;
+
+  margin: 0 auto 18px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 16px;
+
+  background:
+          linear-gradient(
+                  135deg,
+                  rgba(91, 140, 255, 0.11),
+                  rgba(197, 108, 255, 0.11)
+          );
+
+  color: #7181d9;
+
+  font-size: 24px;
+}
+
+
+.empty-card h2 {
+  margin: 0;
+
+  color: #27314a;
+
+  font-size: 20px;
+
+  font-weight: 800;
+}
+
+
+.empty-card p {
+  margin: 9px 0 22px;
+
+  color: #8994a6;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+  .preview-header {
+    flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .preview-layout {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+
+}
+
+
+@media (max-width: 800px) {
+
+  .preview-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .slides-sidebar {
+    min-height: auto;
+    max-height: none;
+  }
+
+  .slides-list {
+    flex-direction: row;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .slide-thumb {
+    min-width: 155px;
+  }
+
+  .slide-thumb.active::before {
+    left: 9px;
+    right: 9px;
+
+    top: auto;
+    bottom: 0;
+
+    width: auto;
+    height: 3px;
+
+    border-radius: 4px 4px 0 0;
+  }
+
+  .slide-container {
+    min-height: 400px;
+
+    padding: 15px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .preview-header {
+    gap: 18px;
+  }
+
+  .header-actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+  }
+
+  :host ::ng-deep .header-btn:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .preview-workspace {
+    padding: 11px;
+  }
+
+  .slide-container {
+    min-height: 320px;
+
+    padding: 10px;
+  }
+
+  .slide-navigation {
+    gap: 10px;
+  }
+
+  :host ::ng-deep .navigation-btn {
+    min-width: 85px;
+  }
+
+  .regeneration-form {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  :host ::ng-deep .regenerate-button {
+    width: 100% !important;
+  }
+
+}

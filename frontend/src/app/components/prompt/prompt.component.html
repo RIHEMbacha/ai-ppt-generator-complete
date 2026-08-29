@@ -1,0 +1,151 @@
+<section class="prompt-page">
+
+    <!-- INTRO -->
+    <div class="prompt-intro">
+        <h1>SlideForge <span>AI</span></h1>
+
+        <p>
+            Describe your presentation and SlideForge AI will transform your idea
+            into a structured presentation.
+        </p>
+
+    </div>
+
+
+    <!-- MAIN PROMPT CARD -->
+    <div class="prompt-card">
+
+        <!-- Animated border -->
+        <div class="card-glow"></div>
+
+        <div class="card-content">
+
+            <!-- Prompt -->
+            <div class="prompt-section">
+
+                <div class="section-header">
+                    <div>
+                        <label class="field-label">
+                            Presentation brief
+                        </label>
+
+                        <span class="field-hint">
+              Describe your topic, audience and what you want to cover.
+            </span>
+                    </div>
+
+                    <button type="button" class="ai-badge">
+                        <i class="pi pi-file"></i> Generate from document
+                    </button>
+                </div>
+
+                <textarea
+                        pTextarea
+                        [autoResize]="true"
+                        class="prompt-textarea"
+                        [(ngModel)]="prompt"
+                        rows="5"
+                        placeholder="Example: Create a professional presentation about the future of sports technology, covering market size, fan engagement, athlete analytics, and media rights..."
+                ></textarea>
+
+            </div>
+            <div class="options-grid">
+                <div class="option-box blue">
+
+                    <div class="option-icon">
+                        <i class="pi pi-list"></i>
+                    </div>
+
+                    <div class="option-content">
+
+                        <label class="field-label">
+                            Number of slides
+                        </label>
+
+                        <p-inputNumber
+                                [(ngModel)]="numSlides"
+                                [min]="3"
+                                [max]="20"
+                                [showButtons]="true"
+                                [useGrouping]="false"
+                                [fluid]="true"
+                                styleClass="prompt-number-input"
+                                inputId="numSlides"
+                        />
+
+                    </div>
+
+                </div>
+
+
+                <!-- Tone -->
+                <div class="option-box purple">
+
+                    <div class="option-icon">
+                        <i class="pi pi-sparkles"></i>
+                    </div>
+
+                    <div class="option-content">
+
+                        <label class="field-label">
+                            Presentation tone
+                        </label>
+                        <p-select
+                                [(ngModel)]="tone"
+                                [options]="tones"
+                                optionLabel="label"
+                                optionValue="value"
+                                styleClass="prompt-tone-select"
+                                appendTo="body"
+                        />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTION -->
+            <div class="generate-row ">
+
+
+                <button
+                        class="generate-button"
+                        (click)="generate()"
+                        [disabled]="loading"
+                >
+
+                    @if (loading) {
+
+                        <span class="button-spinner"></span>
+
+                        Generating...
+
+                    } @else {
+
+                        Generate Outline
+
+                        <span class="arrow"><i class="pi pi-arrow-right"></i></span>
+
+                    }
+
+                </button>
+
+            </div>
+
+
+            @if (error) {
+
+                <div class="error-message">
+                    {{ error }}
+                </div>
+
+            }
+
+        </div>
+
+    </div>
+
+
+</section>

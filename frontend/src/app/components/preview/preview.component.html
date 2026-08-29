@@ -1,0 +1,336 @@
+@if (presentation; as p) {
+
+    <section class="preview-page">
+
+        <div class="preview-header">
+
+            <div class="preview-heading">
+
+                <div class="preview-eyebrow">
+                    PRESENTATION PREVIEW
+                </div>
+
+                <h1>
+                    {{ p.title }}
+                </h1>
+
+                @if (p.subtitle) {
+                    <p>
+                        {{ p.subtitle }}
+                    </p>
+                }
+
+            </div>
+
+
+            <!-- HEADER ACTIONS -->
+
+            <div class="header-actions">
+
+                <p-button
+                        label="Edit outline"
+                        icon="pi pi-arrow-left"
+                        [text]="true"
+                        severity="secondary"
+                        (onClick)="back()"
+                        styleClass="header-btn"
+                />
+
+                <p-button
+                        label="Export HTML"
+                        icon="pi pi-code"
+                        [outlined]="true"
+                        severity="secondary"
+                        [loading]="exporting"
+                        [disabled]="exporting"
+                        (onClick)="export('html')"
+                        styleClass="header-btn"
+                />
+
+                <p-button
+                        label="Export PPTX"
+                        icon="pi pi-download"
+                        severity="primary"
+                        [loading]="exporting"
+                        [disabled]="exporting"
+                        (onClick)="export('pptx')"
+                        styleClass="header-btn export-btn"
+                />
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MAIN WORKSPACE
+             ===================================================== -->
+
+        <div class="preview-layout">
+
+
+            <!-- =================================================
+                 SLIDE SIDEBAR
+                 ================================================= -->
+
+            <aside class="slides-sidebar">
+
+                <div class="sidebar-header">
+
+                    <div>
+                        <span class="sidebar-title">
+                            Slides
+                        </span>
+
+                        <span class="sidebar-count">
+                            {{ p.slides.length }}
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="slides-list">
+
+                    @for (
+                        s of p.slides;
+                        track $index;
+                        let i = $index
+                            ) {
+
+                        <button
+                                type="button"
+                                class="slide-thumb"
+                                [class.active]="i === currentIndex"
+                                (click)="selectSlide(i)"
+                        >
+
+                            <span class="thumb-number">
+                                {{ i + 1 }}
+                            </span>
+
+                            <span class="thumb-info">
+
+                                <span class="thumb-label">
+                                    {{ s.label || 'Slide ' + (i + 1) }}
+                                </span>
+
+                            </span>
+
+                        </button>
+
+                    }
+
+                </div>
+
+            </aside>
+
+
+            <!-- =================================================
+                 PREVIEW AREA
+                 ================================================= -->
+
+            <main class="preview-workspace">
+
+
+                <!-- =================================================
+                     SLIDE PREVIEW
+                     ================================================= -->
+
+                    <div
+                            class="slide-frame "
+                            #slideFrame
+                    >
+
+                        @if (currentSlide) {
+
+                            <div
+                                    class="slide-inner "
+                                    [style.transform]="'scale(' + scale + ')'"
+                                    [innerHTML]="safeHtml(currentSlide.html)"
+                            ></div>
+
+                        } @else {
+
+                            <div class="empty-slide">
+
+                                <span class="empty-icon">
+                                    <i class="pi pi-image"></i>
+                                </span>
+
+                                <span>
+                                    No slide selected
+                                </span>
+
+                            </div>
+
+                        }
+
+                    </div>
+
+                <div class="slide-navigation ">
+
+                    <p-button
+                            label="Previous"
+                            icon="pi pi-chevron-left"
+                            [outlined]="true"
+                            severity="secondary"
+                            [disabled]="currentIndex === 0"
+                            (onClick)="prev()"
+                            styleClass="navigation-btn"
+                    />
+
+                    <div class="slide-counter">
+
+                        <span class="current-number">
+                            {{ currentIndex + 1 }}
+                        </span>
+
+                        <span class="counter-separator">
+                            /
+                        </span>
+
+                        <span>
+                            {{ p.slides.length }}
+                        </span>
+
+                    </div>
+
+                    <p-button
+                            label="Next"
+                            icon="pi pi-chevron-right"
+                            iconPos="right"
+                            [outlined]="true"
+                            severity="secondary"
+                            [disabled]="currentIndex >= p.slides.length - 1"
+                            (onClick)="next()"
+                            styleClass="navigation-btn"
+                    />
+
+                </div>
+
+
+                <!-- =================================================
+                     AI REGENERATION
+                     ================================================= -->
+
+                <div class="regeneration-card">
+
+                    <div class="regeneration-header">
+
+                        <div class="regeneration-title">
+
+                            <span class="regeneration-icon">
+                                <i class="pi pi-sparkles"></i>
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Improve this slide
+                                </strong>
+
+                                <span>
+                                    Ask AI to modify the current slide.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="regeneration-form">
+
+                        <div class="regen-input-wrapper">
+
+                            <span class="regen-input-icon">
+                                <i class="pi pi-pencil"></i>
+                            </span>
+
+                            <input
+                                    pInputText
+                                    type="text"
+                                    [(ngModel)]="regenInstruction"
+                                    placeholder="e.g. Make the statistics larger, use a warmer accent..."
+                                    class="regen-input"
+                                    (keyup.enter)="regenerate()"
+                            />
+
+                        </div>
+
+
+                        <p-button
+                                label="Regenerate slide"
+                                icon="pi pi-sparkles"
+                                [loading]="regenerating"
+                                [disabled]="regenerating || !regenInstruction.trim()"
+                                (onClick)="regenerate()"
+                                styleClass="regenerate-button"
+                        />
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     ERROR
+                     ================================================= -->
+
+                @if (error) {
+
+                    <div class="error-message">
+
+                        <span class="error-icon">
+                            !
+                        </span>
+
+                        <span>
+                            {{ error }}
+                        </span>
+
+                    </div>
+
+                }
+
+            </main>
+
+        </div>
+
+    </section>
+
+} @else {
+
+    <!-- =========================================================
+         EMPTY STATE
+         ========================================================= -->
+
+    <section class="empty-page">
+
+        <div class="empty-card">
+
+            <div class="empty-card-icon">
+                <i class="pi pi-folder-open"></i>
+            </div>
+
+            <h2>
+                No presentation available
+            </h2>
+
+            <p>
+                Generate a presentation first to see the preview.
+            </p>
+
+            <p-button
+                    label="Create presentation"
+                    icon="pi pi-plus"
+                    (onClick)="back()"
+            />
+
+        </div>
+
+    </section>
+
+}

@@ -1,0 +1,17 @@
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+python-multipart==0.0.9
+pydantic==2.8.2
+pydantic-settings==2.3.4
+requests==2.32.3
+python-dotenv==1.0.1
+pdfplumber==0.11.1
+python-pptx==1.0.2
+Pillow==10.4.0
+aiofiles==23.2.1
+httpx==0.27.0
+google-genai
+huggingface_hub>=0.26.0
+azure-identity>=1.17.1
+microsoft-kiota-abstractions>=1.8.4
+microsoft-agents-m365copilot>=0.2.0

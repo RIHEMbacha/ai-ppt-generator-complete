@@ -1,0 +1,226 @@
+:host {
+    display: block;
+    min-height: 100vh;
+}
+
+/* =========================================================
+   APP BACKGROUND
+   Inspired by the first reference:
+   soft blue/gray Apple-like background
+   ========================================================= */
+
+.app-shell {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+
+    /* Diagonal blend shifting from bright white (top-left/bottom-right)
+       to soft slate-lavender hues in the middle core */
+    background: linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #f5f3f8 25%,
+            #eae6f0 50%,
+            #f3eff7 75%,
+            #ffffff 100%
+    );
+
+    color: #172033;
+}
+
+/* Soft light wash in top-left */
+.app-shell::before {
+    content: "";
+    position: absolute;
+    width: 800px;
+    height: 800px;
+
+    top: -250px;
+    left: -150px;
+
+    background: rgba(255, 255, 255, 0.85);
+    filter: blur(120px);
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+.app-shell::after {
+    content: "";
+    position: absolute;
+
+    width: 600px;
+    height: 600px;
+
+    right: -100px;
+    top: 30%;
+
+    background: rgba(218, 210, 233, 0.25);
+    filter: blur(100px);
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.app-header {
+    position: relative;
+    z-index: 10;
+
+    height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 42px;
+
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.65);
+
+    box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.8),
+            0 10px 40px rgba(80, 100, 130, 0.06);
+}
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-mark {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #5b8cff,
+                    #8d6bff 50%,
+                    #f06cff
+            );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow:
+            0 6px 20px rgba(92, 120, 255, 0.25);
+}
+
+.brand-mark span {
+    width: 13px;
+    height: 13px;
+
+    border-radius: 4px;
+
+    background: white;
+
+    opacity: 0.95;
+}
+
+.brand-name {
+    font-size: 19px;
+    font-weight: 750;
+    letter-spacing: -0.4px;
+    color: #182235;
+}
+
+.brand-name span {
+    color: #6578d8;
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.header-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 7px 12px;
+
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    color: #69758a;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    box-shadow:
+            0 4px 16px rgba(60, 80, 110, 0.06);
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #a0a8b5;
+}
+
+.status-dot.online {
+    background: #35c98b;
+    box-shadow: 0 0 10px rgba(53, 201, 139, 0.55);
+}
+
+.status-dot.offline {
+    background: #ef6f79;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.app-content {
+    position: relative;
+    z-index: 2;
+
+    width: min(1180px, calc(100% - 48px));
+
+    margin: 0 auto;
+
+    padding: 70px 0 100px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .app-header {
+        padding: 0 20px;
+    }
+
+    .app-content {
+        width: calc(100% - 32px);
+        padding-top: 45px;
+    }
+
+    .brand-name {
+        font-size: 17px;
+    }
+
+    .header-status {
+        padding: 6px 9px;
+    }
+}

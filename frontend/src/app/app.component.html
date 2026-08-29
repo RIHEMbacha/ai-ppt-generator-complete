@@ -1,0 +1,31 @@
+<div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="brand">
+            <div class="brand-mark">
+                <span></span>
+            </div>
+
+            <div class="brand-name">
+                SlideForge <span>AI</span>
+            </div>
+        </div>
+
+        <div class="header-status">
+            <span
+                class="status-dot"
+                [class.online]="healthOk"
+                [class.offline]="!healthOk"
+            ></span>
+
+            <span>{{ healthLabel }}</span>
+        </div>
+    </header>
+
+    <!-- ROUTED CONTENT -->
+    <main class="app-content">
+        <router-outlet></router-outlet>
+    </main>
+
+</div>

@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;750;800&display=swap');
+@import 'primeicons/primeicons.css';
+@import "tailwindcss";
+
+/* PrimeIcons styling */
+.pi {
+  font-size: 13px !important;
+  margin-right: 4px;
+}
+
+:root {
+  --text: #172033;
+  --text-soft: #4f5d73;
+  --muted: #8994a7;
+
+  --border: #e2e7ef;
+
+  --primary: #667eea;
+  --primary-dark: #5869d8;
+
+  --success: #35c98b;
+  --danger: #e85d68;
+
+  --radius: 14px;
+
+  --font:
+          'Inter',
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+}
+
+
+/* =========================================================
+   GLOBAL RESET
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
+
+body {
+  margin: 0;
+
+  font-family: var(--font);
+
+  color: var(--text);
+
+  background: #dce6f2;
+
+  line-height: 1.5;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* =========================================================
+   ANGULAR ROOT
+   ========================================================= */
+
+app-root {
+  display: block;
+
+  width: 100%;
+  min-height: 100vh;
+}
+
+
+/* =========================================================
+   FORM ELEMENTS
+   ========================================================= */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+
+button {
+  border: 0;
+}
+
+
+input,
+textarea,
+select {
+  outline: none;
+}
+
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+  background: rgba(102, 126, 234, 0.2);
+  color: #172033;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 115, 140, 0.25);
+
+  border-radius: 999px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 115, 140, 0.4);
+}
+
+
+/* =========================================================
+   COMMON UTILITIES
+   ========================================================= */
+
+.hidden {
+  display: none !important;
+}
+
+
+.text-muted {
+  color: var(--muted);
+}
+
+
+.text-center {
+  text-align: center;
+}
+
+
+/* =========================================================
+   GLOBAL ANIMATION
+   ========================================================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  body {
+    font-size: 14px;
+  }
+
+}

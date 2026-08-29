@@ -1,0 +1,987 @@
+<section class="outline-page">
+
+    <div class="outline-intro">
+
+        <div class="intro-content">
+            <h1>
+                Review your
+                <span>presentation</span>
+            </h1>
+
+            <p>
+                Refine your content, structure and images before
+                generates the final presentation design.
+            </p>
+
+        </div>
+
+        <button
+                type="button"
+                class="back-button"
+                (click)="back()"
+        >
+            <i class="pi pi-arrow-left"></i> Back
+        </button>
+
+    </div>
+
+    <div class="settings-card">
+
+        <div class="card-header">
+
+            <div>
+                <div class="section-kicker">
+                    PRESENTATION INFORMATION
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="settings-grid">
+
+            <!-- TITLE -->
+
+            <div class="field">
+
+                <label class="field-label">
+                    Title
+                </label>
+
+                <input
+                        pInputText
+                        type="text"
+                        [(ngModel)]="title"
+                        (ngModelChange)="saveChanges()"
+                        placeholder="Presentation title"
+                        class="outline-input"
+                />
+
+            </div>
+
+
+            <!-- SUBTITLE -->
+
+            <div class="field">
+
+                <label class="field-label">
+                    Subtitle
+                </label>
+
+                <input
+                        pInputText
+                        type="text"
+                        [(ngModel)]="subtitle"
+                        (ngModelChange)="saveChanges()"
+                        placeholder="Presentation subtitle"
+                        class="outline-input"
+                />
+
+            </div>
+
+
+            <!-- PRESENTERS -->
+
+            <div class="field">
+
+                <label class="field-label">
+                    Presenters
+                </label>
+
+                <input
+                        pInputText
+                        type="text"
+                        [ngModel]="presenters.join(', ')"
+                        (ngModelChange)="setPresentersFromInput($event)"
+                        placeholder="Presenter names"
+                        class="outline-input"
+                />
+
+            </div>
+
+
+            <!-- DATE -->
+
+            <div class="field">
+
+                <label class="field-label">
+                    Date
+                </label>
+
+                <input
+                        pInputText
+                        type="text"
+                        [(ngModel)]="date"
+                        (ngModelChange)="saveChanges()"
+                        placeholder="Presentation date"
+                        class="outline-input"
+                />
+
+            </div>
+
+        </div>
+
+
+        <!-- PALETTE -->
+
+        <div class="palette-row">
+
+            <div class="palette-label">
+                <span class="palette-icon"><i class="pi pi-palette !text-[25px]"></i></span>
+
+                <div>
+                    <strong>Color palette</strong>
+                    <small>Generated presentation colors</small>
+                </div>
+            </div>
+
+            <div class="palette-preview">
+
+                @for (entry of paletteEntries(); track entry[0]) {
+
+                    <div
+                            class="swatch"
+                            [style.background]="entry[1]"
+                            [title]="entry[0] + ': ' + entry[1]"
+                    ></div>
+
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="slides-heading">
+
+        <div>
+
+            <div class="section-kicker">
+                Slide Structure
+            </div>
+
+        </div>
+
+        <div class="slide-count">
+            {{ slides.length }} slides
+        </div>
+
+    </div>
+
+    <div class="outline-list">
+
+        @for (slide of slides; track $index; let i = $index) {
+
+            <article class="outline-card">
+
+                <div class="outline-card-header">
+
+                    <div class="slide-number">
+                        {{ i + 1 }}
+                    </div>
+
+                    <div class="slide-header-main">
+
+                        <input
+                                pInputText
+                                type="text"
+                                [(ngModel)]="slide.label"
+                                (ngModelChange)="saveChanges()"
+                                placeholder="Slide label"
+                                class="slide-label-input"
+                        />
+
+                        <span class="slide-meta">
+                            Slide {{ i + 1 }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- LAYOUT -->
+
+                    <div class="layout-selector">
+
+                        <label>
+                            Layout
+                        </label>
+
+                        <p-select
+                                [(ngModel)]="slide.layout_hint"
+                                [options]="layoutHints"
+                                (ngModelChange)="saveChanges()"
+                                styleClass="layout-select"
+                                appendTo="body"
+                        />
+
+                    </div>
+
+
+                    <!-- REMOVE -->
+
+                    <button
+                            type="button"
+                            class="remove-slide-button"
+                            (click)="removeSlide(i)"
+                            title="Remove slide"
+                    >
+                        <i class="pi pi-times"></i>
+                    </button>
+
+                </div>
+
+
+                <!-- =================================================
+                     OBJECTIVE
+                     ================================================= -->
+
+                <div class="slide-section">
+
+                    <div class="section-title-row">
+
+                        <div>
+
+                            <label class="field-label">
+                                Objective
+                            </label>
+
+                            <span class="field-hint">
+                                What should this slide communicate?
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <textarea
+                            pTextarea
+                            [autoResize]="true"
+                            [(ngModel)]="slide.objective"
+                            (ngModelChange)="saveChanges()"
+                            rows="2"
+                            placeholder="What should this slide communicate?"
+                            class="outline-textarea"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- =================================================
+                     CONTENT POINTS
+                     ================================================= -->
+
+                <div class="slide-section">
+
+                    <div class="section-title-row">
+
+                        <div>
+
+                            <label class="field-label">
+                                Content points
+                            </label>
+
+                            <span class="field-hint">
+                                Main ideas that should appear on this slide.
+                            </span>
+
+                        </div>
+
+                        <button
+                                type="button"
+                                class="add-button"
+                                (click)="addPoint(slide)"
+                        >
+                            <i class="pi pi-plus"></i>
+                            Add point
+                        </button>
+
+                    </div>
+
+
+                    @if (slide.points.length) {
+
+                        <div class="points-list">
+
+                            @for (
+                                point of slide.points;
+                                track $index;
+                                let p = $index
+                                    ) {
+
+                                <div class="point-editor">
+
+                                    <div class="point-number">
+                                        {{ p + 1 }}
+                                    </div>
+
+
+                                    <div class="point-fields">
+
+                                        <input
+                                                pInputText
+                                                type="text"
+                                                [(ngModel)]="point.point"
+                                                placeholder="Main point"
+                                                (ngModelChange)="saveChanges()"
+                                                class="outline-input"
+                                        />
+
+                                        <input
+                                                pInputText
+                                                type="text"
+                                                [(ngModel)]="point.explanation"
+                                                placeholder="Short explanation"
+                                                (ngModelChange)="saveChanges()"
+                                                class="outline-input explanation-input"
+                                        />
+
+                                    </div>
+
+
+                                    <button
+                                            type="button"
+                                            class="remove-small-button"
+                                            (click)="removePoint(slide, p)"
+                                            title="Remove point"
+                                    >
+                                        <i class="pi pi-times"></i>
+                                    </button>
+
+                                </div>
+
+                            }
+
+                        </div>
+
+                    }
+
+                </div>
+
+
+                <!-- =================================================
+                     STATISTICS / KPIs
+                     ================================================= -->
+
+                <div class="slide-section">
+
+                    <div class="section-title-row">
+
+                        <div>
+
+                            <label class="field-label">
+                                Statistics / KPIs
+                            </label>
+
+                            <span class="field-hint">
+                                Add important numbers or metrics.
+                            </span>
+
+                        </div>
+
+                        <button
+                                type="button"
+                                class="add-button"
+                                (click)="addStat(slide)"
+                        >
+                            <i class="pi pi-plus"></i>
+                            Add statistic
+                        </button>
+
+                    </div>
+
+
+                    @if (slide.stats.length) {
+
+                        <div class="stats-grid">
+
+                            @for (
+                                stat of slide.stats;
+                                track $index;
+                                let s = $index
+                                    ) {
+
+                                <div class="stat-card">
+
+                                    <div class="stat-header">
+
+                                        <div class="stat-number">
+                                            {{ s + 1 }}
+                                        </div>
+
+                                        <button
+                                                type="button"
+                                                class="remove-small-button"
+                                                (click)="removeStat(slide, s)"
+                                        >
+                                            <i class="pi pi-times"></i>
+                                        </button>
+
+                                    </div>
+
+
+                                    <div class="stat-fields">
+
+                                        <input
+                                                pInputText
+                                                type="text"
+                                                [(ngModel)]="stat.value"
+                                                placeholder="42%"
+                                                class="stat-value"
+                                        />
+
+                                        <input
+                                                pInputText
+                                                type="text"
+                                                [(ngModel)]="stat.label"
+                                                placeholder="Statistic name"
+                                                (ngModelChange)="saveChanges()"
+                                        />
+
+                                        <input
+                                                pInputText
+                                                type="text"
+                                                [(ngModel)]="stat.context"
+                                                placeholder="Context / description"
+                                                (ngModelChange)="saveChanges()"
+                                        />
+
+                                    </div>
+
+                                </div>
+
+                            }
+
+                        </div>
+
+                    }
+
+                </div>
+
+
+                <!-- =================================================
+                     CHART
+                     ================================================= -->
+
+                <div class="slide-section">
+
+                    <div class="section-title-row">
+
+                        <div>
+
+                            <label class="field-label">
+                                Chart
+                            </label>
+
+                            <span class="field-hint">
+                                Add a visual chart when numerical data is available.
+                            </span>
+
+                        </div>
+
+
+                        @if (slide.chart) {
+
+                            <button
+                                    type="button"
+                                    class="remove-outline-button"
+                                    (click)="removeChart(slide)"
+                            >
+                                Remove chart
+                            </button>
+
+                        } @else {
+
+                            <button
+                                    type="button"
+                                    class="add-button"
+                                    (click)="addChart(slide)"
+                            >
+                                <i class="pi pi-plus"></i>
+                                Add chart
+                            </button>
+
+                        }
+
+                    </div>
+
+
+                    @if (slide.chart) {
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+
+                                <div class="chart-icon">
+                                    <i class="pi pi-chart-line"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Chart configuration
+                                    </strong>
+
+                                    <span>
+                                        Define the chart and its data.
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="chart-fields">
+
+                                <div class="field">
+
+                                    <label class="field-label">
+                                        Chart title
+                                    </label>
+
+                                    <input
+                                            pInputText
+                                            type="text"
+                                            [(ngModel)]="slide.chart.title"
+                                            placeholder="Chart title"
+                                            class="outline-input"
+                                            (ngModelChange)="saveChanges()"
+                                    />
+
+                                </div>
+
+
+                                <div class="field">
+
+                                    <label class="field-label">
+                                        Chart type
+                                    </label>
+
+                                    <p-select
+                                            [(ngModel)]="slide.chart.type"
+                                            [options]="[
+                                                { label: 'Bar chart', value: 'bar' },
+                                                { label: 'Line chart', value: 'line' },
+                                                { label: 'Pie chart', value: 'pie' },
+                                                { label: 'Doughnut chart', value: 'doughnut' }
+                                            ]"
+                                            (ngModelChange)="saveChanges()"
+                                            optionLabel="label"
+                                            optionValue="value"
+                                            styleClass="outline-select"
+                                            appendTo="body"
+                                    />
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="field chart-description">
+
+                                <label class="field-label">
+                                    Description
+                                </label>
+
+                                <input
+                                        pInputText
+                                        type="text"
+                                        [(ngModel)]="slide.chart.description"
+                                        placeholder="Chart description"
+                                        class="outline-input"
+                                        (ngModelChange)="saveChanges()"
+                                />
+
+                            </div>
+
+
+                            <!-- CHART DATA -->
+
+                            <div class="chart-data">
+
+                                <div class="section-title-row">
+
+                                    <div>
+
+                                        <label class="field-label">
+                                            Chart data
+                                        </label>
+
+                                        <span class="field-hint">
+                                            Add labels and numerical values.
+                                        </span>
+
+                                    </div>
+
+                                    <button
+                                            type="button"
+                                            class="add-button"
+                                            (click)="addChartDataRow(slide)"
+                                    >
+                                        <i class="pi pi-plus"></i>
+                                        Add row
+                                    </button>
+
+                                </div>
+
+
+                                <div class="chart-data-list">
+
+                                    @for (
+                                        row of getChartDataRows(slide);
+                                        track $index;
+                                        let d = $index
+                                            ) {
+
+                                        <div class="chart-data-row">
+
+                                            <div class="data-number">
+                                                {{ d + 1 }}
+                                            </div>
+
+                                            <input
+                                                    pInputText
+                                                    type="text"
+                                                    [(ngModel)]="row.label"
+                                                    placeholder="Label, e.g. 2024"
+                                                    (ngModelChange)="saveChanges()"
+                                            />
+
+                                            <input
+                                                    pInputText
+                                                    type="number"
+                                                    [(ngModel)]="row.value"
+                                                    placeholder="Value"
+                                                    (ngModelChange)="saveChanges()"
+                                            />
+
+                                            <button
+                                                    type="button"
+                                                    class="remove-small-button"
+                                                    (click)="removeChartDataRow(slide, d)"
+                                            >
+                                                <i class="pi pi-times"></i>
+                                            </button>
+
+                                        </div>
+
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    }
+
+                </div>
+
+
+                <!-- =================================================
+                     TIMELINE
+                     ================================================= -->
+
+                <div class="slide-section">
+
+                    <div class="section-title-row">
+
+                        <div>
+
+                            <label class="field-label">
+                                Timeline
+                            </label>
+
+                            <span class="field-hint">
+                                Useful for roadmaps, milestones and historical events.
+                            </span>
+
+                        </div>
+
+                        <button
+                                type="button"
+                                class="add-button"
+                                (click)="addTimelineItem(slide)"
+                        >
+                            <i class="pi pi-plus"></i>
+                            Add step
+                        </button>
+
+                    </div>
+
+
+                    @if (slide.timeline.length) {
+
+                        <div class="timeline">
+
+                            @for (
+                                item of slide.timeline;
+                                track $index;
+                                let t = $index
+                                    ) {
+
+                                <div class="timeline-item">
+
+                                    @if (!$last) {
+                                        <div class="timeline-line"></div>
+                                    }
+
+
+                                    <div class="timeline-marker">
+                                        {{ t + 1 }}
+                                    </div>
+
+
+                                    <div class="timeline-content">
+
+                                        <div class="timeline-top">
+
+                                            <input
+                                                    pInputText
+                                                    type="text"
+                                                    [(ngModel)]="item.period"
+                                                    (ngModelChange)="saveChanges()"
+                                                    placeholder="Period / Date"
+                                                    class="timeline-period"
+                                            />
+
+                                            <button
+                                                    type="button"
+                                                    class="remove-small-button"
+                                                    (click)="removeTimelineItem(slide, t)"
+                                            >
+                                                <i class="pi pi-times"></i>
+                                            </button>
+
+                                        </div>
+
+
+                                        <input
+                                                pInputText
+                                                type="text"
+                                                [(ngModel)]="item.title"
+                                                placeholder="Timeline title"
+                                                class="outline-input"
+                                        />
+
+
+                                        <textarea
+                                                pTextarea
+                                                [autoResize]="true"
+                                                rows="2"
+                                                [(ngModel)]="item.description"
+                                                (ngModelChange)="saveChanges()"
+                                                placeholder="Description"
+                                                class="outline-textarea"
+                                        ></textarea>
+
+                                    </div>
+
+                                </div>
+
+                            }
+
+                        </div>
+
+                    }
+
+
+                </div>
+
+
+                <!-- =================================================
+                     IMAGE SELECTION
+                     ================================================= -->
+
+                @if (
+                    slide.image_selection &&
+                    slide.image_selection.candidates.length
+                        ) {
+
+                    <div class="slide-section">
+
+                        <div class="section-title-row">
+
+                            <div>
+
+                                <label class="field-label">
+                                    Choose image
+                                </label>
+
+                                <span class="field-hint">
+                                    Search:
+                                    <strong>
+                                        {{ slide.image_selection.query }}
+                                    </strong>
+                                </span>
+
+                            </div>
+
+
+                            @if (slide.image_selection.selected_url) {
+
+                                <span class="selected-badge">
+                                    <i class="pi pi-check"></i> Image selected
+                                </span>
+
+                            }
+
+                        </div>
+
+
+                        <div class="image-grid">
+
+                            @for (
+                                image of slide.image_selection.candidates;
+                                track image.url
+                                    ) {
+
+                                <button
+                                        type="button"
+                                        class="image-option"
+                                        [class.selected]="isImageSelected(slide, image)"
+                                        (click)="selectImage(slide, image)"
+                                >
+
+                                    <div class="image-wrapper">
+
+                                        <img
+                                                [src]="image.thumbnail_url || image.url"
+                                                [alt]="image.photographer || 'Presentation image'"
+                                        />
+
+                                        @if (isImageSelected(slide, image)) {
+
+                                            <div class="image-overlay">
+
+                                                <div class="check-icon">
+                                                    <i class="pi pi-check"></i>
+                                                </div>
+
+                                            </div>
+
+                                        }
+
+                                    </div>
+
+
+                                    <div class="image-info">
+
+                                        <span>
+                                            {{ image.width }} × {{ image.height }}
+                                        </span>
+
+                                        <span>
+                                            Score:
+                                            {{ image.score | number:'1.0-2' }}
+                                        </span>
+
+                                    </div>
+
+                                </button>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                }
+
+
+                @if (
+                    slide.image_query &&
+                    !slide.image_selection
+                        ) {
+
+                    <div class="no-image">
+
+                        <span>
+                            Image search:
+                        </span>
+
+                        <strong>
+                            {{ slide.image_query }}
+                        </strong>
+
+
+                    </div>
+
+                }
+
+                <div class="slide-section">
+
+                    <label class="field-label">
+                        Speaker notes
+                    </label>
+
+                    <span class="field-hint">
+                        Private notes for the presenter.
+                    </span>
+
+                    <textarea
+                            pTextarea
+                            [autoResize]="true"
+                            rows="2"
+                            (ngModelChange)="saveChanges()"
+                            [(ngModel)]="slide.notes"
+                            placeholder="Speaker notes"
+                            class="outline-textarea"
+                    ></textarea>
+
+                </div>
+
+            </article>
+
+        }
+
+    </div>
+
+    <div class="bottom-actions">
+
+        <button
+                type="button"
+                class="secondary-action"
+                (click)="addSlide()"
+                [disabled]="loading"
+        >
+            <i class="pi pi-plus"></i> Add slide
+        </button>
+
+
+
+        <button
+                type="button"
+                class="generate-button"
+                (click)="confirm()"
+                [disabled]="loading"
+        >
+
+            @if (loading) {
+
+                <span class="button-spinner"></span>
+
+                Designing slides…
+
+            } @else {
+
+                Confirm & Generate Design
+
+                <span class="arrow">
+                    <i class="pi pi-arrow-right"></i>
+                </span>
+
+            }
+
+        </button>
+
+    </div>
+
+    @if (error) {
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+    }
+
+</section>
