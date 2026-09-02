@@ -1,5 +1,6 @@
 fastapi==0.111.0
 uvicorn[standard]==0.30.1
+gunicorn
 python-multipart==0.0.9
 pydantic==2.8.2
 pydantic-settings==2.3.4
@@ -15,3 +16,5 @@ huggingface_hub>=0.26.0
 azure-identity>=1.17.1
 microsoft-kiota-abstractions>=1.8.4
 microsoft-agents-m365copilot>=0.2.0
+Werkzeug
+openai
