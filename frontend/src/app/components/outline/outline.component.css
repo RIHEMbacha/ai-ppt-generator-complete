@@ -7,7 +7,6 @@
 }
 
 .outline-page {
-  max-width: 1100px;
   margin: 0 auto;
   padding-bottom: 50px;
 }
@@ -126,7 +125,32 @@
           0 8px 20px rgba(70, 90, 120, 0.08);
 }
 
+.palette-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
 
+.palette-option-title {
+  white-space: nowrap;
+}
+
+.palette-option-colors {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.palette-option-swatch {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  display: inline-block;
+}
 /* =========================================================
    COMMON CARD
    ========================================================= */

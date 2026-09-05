@@ -1,156 +1,451 @@
-"""Export Presentation → PPTX, PDF or simple HTML."""
+
 
 import io
 import re
-from typing import List
 
-from app.models import Presentation, Slide
+from app.models import Presentation
 
 
-async def export_presentation(pres: Presentation, fmt: str = "pptx") -> bytes:
+async def export_presentation(
+        pres: Presentation,
+        fmt: str = "pptx",
+) -> bytes:
+
     fmt = (fmt or "pptx").lower()
-    if fmt == "html":
-        return _export_html(pres)
+
     if fmt == "pdf":
-        return _export_pdf(pres)
-    return _export_pptx(pres)
+        return await _export_pdf(pres)
+
+    if fmt == "pptx":
+        return await _export_pptx(pres)
+
+    raise ValueError(
+        "Unsupported export format. Use 'pdf' or 'pptx'."
+    )
 
 
-def _export_html(pres: Presentation) -> bytes:
-    slides_html = []
-    for i, s in enumerate(pres.slides):
-        slides_html.append(
-            f'<section class="slide" id="slide-{i+1}">\n{s.html}\n</section>'
+# ============================================================
+# PDF
+# ============================================================
+
+async def _export_pdf(pres: Presentation) -> bytes:
+    """
+    Render HTML directly to PDF using Chromium.
+
+    IMPORTANT:
+    This does NOT screenshot the slides.
+
+    Chromium's PDF engine preserves actual HTML text in the
+    resulting PDF, so text can be selected and searched.
+    """
+
+    try:
+        from playwright.async_api import async_playwright
+    except ImportError as exc:
+        raise RuntimeError(
+            "Playwright is required for PDF export. "
+            "Install with: pip install playwright && "
+            "playwright install chromium"
+        ) from exc
+
+    async with async_playwright() as p:
+
+        browser = await p.chromium.launch(
+            headless=True,
+            args=[
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+            ],
         )
-    body = "\n".join(slides_html)
-    doc = f"""<!DOCTYPE html>
+
+        page = await browser.new_page(
+            viewport={
+                "width": 1600,
+                "height": 900,
+            },
+            device_scale_factor=1,
+        )
+
+        # Build one HTML document containing all slides.
+        html = _build_pdf_document(pres)
+
+        await page.set_content(
+            html,
+            wait_until="networkidle",
+        )
+
+        # Wait for fonts.
+        await page.evaluate(
+            """
+            async () => {
+                if (document.fonts) {
+                    await document.fonts.ready;
+                }
+            }
+            """
+        )
+
+        # Wait for images.
+        await page.evaluate(
+            """
+            async () => {
+                const images = Array.from(document.images);
+
+                await Promise.all(
+                    images.map(img => {
+                        if (img.complete) {
+                            return Promise.resolve();
+                        }
+
+                        return new Promise(resolve => {
+                            img.onload = resolve;
+                            img.onerror = resolve;
+                        });
+                    })
+                );
+            }
+            """
+        )
+
+        await page.wait_for_timeout(100)
+
+        pdf_bytes = await page.pdf(
+            format="A4",
+            landscape=True,
+
+            # Very important:
+            # preserve the CSS colors/backgrounds.
+            print_background=True,
+
+            # Remove browser margins.
+            margin={
+                "top": "0",
+                "right": "0",
+                "bottom": "0",
+                "left": "0",
+            },
+
+            # Each .slide becomes one PDF page.
+            prefer_css_page_size=True,
+        )
+
+        await browser.close()
+
+        return pdf_bytes
+
+
+def _build_pdf_document(pres: Presentation) -> str:
+    """
+    Build an HTML document specifically for PDF printing.
+
+    Each generated slide.html remains HTML.
+    We do NOT convert it into an image.
+    """
+
+    slides = []
+
+    for index, slide in enumerate(pres.slides):
+
+        slide_html = slide.html or ""
+
+        if not slide_html.strip():
+            slide_html = f"""
+            <div class="empty-slide">
+                {_escape_html(slide.label or "Slide")}
+            </div>
+            """
+
+        slides.append(
+            f"""
+            <section
+                class="slide"
+                id="slide-{index + 1}"
+            >
+                {slide_html}
+            </section>
+            """
+        )
+
+    return f"""
+<!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<title>{_esc(pres.title)}</title>
+
+<meta charset="UTF-8">
+
+<title>{_escape_html(pres.title)}</title>
+
 <style>
-  body {{ margin:0; background:#111; font-family:system-ui,sans-serif; }}
-  .slide {{ margin:24px auto; box-shadow:0 8px 32px rgba(0,0,0,.4); }}
-  @media print {{ .slide {{ page-break-after:always; margin:0; box-shadow:none; }} }}
+
+@page {{
+    size: 16:9;
+    margin: 0;
+}}
+
+html,
+body {{
+    margin: 0;
+    padding: 0;
+}}
+
+body {{
+    margin: 0;
+    padding: 0;
+}}
+
+.slide {{
+    width: 1600px;
+    height: 900px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    page-break-after: always;
+
+    break-after: page;
+
+    box-sizing: border-box;
+}}
+
+.slide:last-child {{
+    page-break-after: auto;
+    break-after: auto;
+}}
+
+.empty-slide {{
+    width: 1600px;
+    height: 900px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: Arial, sans-serif;
+    font-size: 48px;
+}}
+
+* {{
+    box-sizing: border-box;
+}}
+
 </style>
+
 </head>
+
 <body>
-{body}
+
+{''.join(slides)}
+
 </body>
-</html>"""
-    return doc.encode("utf-8")
+
+</html>
+"""
 
 
-def _export_pdf(pres: Presentation) -> bytes:
-   try:
-       from reportlab.lib.pagesizes import landscape, letter
-       from reportlab.lib.styles import getSampleStyleSheet
-       from reportlab.lib.units import inch
-       from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
-   except ImportError as exc:
-       raise RuntimeError("reportlab is required for PDF export. pip install reportlab") from exc
+# ============================================================
+# PPTX
+# ============================================================
 
-   buffer = io.BytesIO()
-   doc = SimpleDocTemplate(
-       buffer,
-       pagesize=landscape(letter),
-       rightMargin=0.5 * inch,
-       leftMargin=0.5 * inch,
-       topMargin=0.4 * inch,
-       bottomMargin=0.4 * inch,
-   )
-   styles = getSampleStyleSheet()
-   story = []
-
-   title_style = styles["Title"]
-   title_style.fontName = "Helvetica-Bold"
-   title_style.fontSize = 20
-   story.append(Paragraph(_esc(pres.title or "Presentation"), title_style))
-
-   if pres.subtitle:
-       subtitle_style = styles["Heading2"]
-       subtitle_style.fontName = "Helvetica"
-       subtitle_style.fontSize = 11
-       story.append(Paragraph(_esc(pres.subtitle), subtitle_style))
-
-   story.append(Spacer(1, 0.2 * inch))
-
-   for index, slide in enumerate(pres.slides, start=1):
-       story.append(Paragraph(f"Slide {index}: {_esc(slide.label or 'Untitled')}", styles["Heading1"]))
-       content = (slide.content or slide.notes or "").strip()
-       if content:
-           story.append(Paragraph(_esc(content[:3000]), styles["BodyText"]))
-       story.append(Spacer(1, 0.15 * inch))
-
-   doc.build(story)
-   return buffer.getvalue()
-
-
-def _export_pptx(pres: Presentation) -> bytes:
+async def _export_pptx(pres: Presentation) -> bytes:
     """
-    Lightweight PPTX export.
-    Each slide is rendered as a single full-bleed image placeholder is not used;
-    instead we put the HTML content as notes and a simple title box.
-    For true visual fidelity the frontend should screenshot the HTML slides
-    and embed images; this keeps the dependency light.
+    PPTX export.
+
+    Each HTML slide is rendered as a high-resolution image
+    and inserted as a full-bleed PowerPoint slide.
+
+    This gives maximum visual fidelity.
     """
+
+    try:
+        from playwright.async_api import async_playwright
+    except ImportError as exc:
+        raise RuntimeError(
+            "Playwright is required for PPTX export."
+        ) from exc
+
     try:
         from pptx import Presentation as PptxPresentation
-        from pptx.util import Inches, Pt, Emu
-        from pptx.dml.color import RGBColor
-        from pptx.enum.text import PP_ALIGN
-    except ImportError:
-        raise RuntimeError("python-pptx is required for PPTX export. pip install python-pptx")
+        from pptx.util import Inches
+    except ImportError as exc:
+        raise RuntimeError(
+            "python-pptx is required for PPTX export. "
+            "Install with: pip install python-pptx"
+        ) from exc
 
-    prs = PptxPresentation()
-    prs.slide_width = Inches(13.333)   # 16:9
-    prs.slide_height = Inches(7.5)
+    async with async_playwright() as p:
 
-    blank = prs.slide_layouts[6]  # blank
+        browser = await p.chromium.launch(
+            headless=True,
+            args=[
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+            ],
+        )
 
-    for s in pres.slides:
-        slide = prs.slides.add_slide(blank)
+        page = await browser.new_page(
+            viewport={
+                "width": 1600,
+                "height": 900,
+            },
+            device_scale_factor=2,
+        )
 
-        # Title shape
-        left = Inches(0.7)
-        top = Inches(0.5)
-        width = Inches(12)
-        height = Inches(1.2)
-        txBox = slide.shapes.add_textbox(left, top, width, height)
-        tf = txBox.text_frame
-        tf.word_wrap = True
-        p = tf.paragraphs[0]
-        p.text = s.label or "Slide"
-        p.font.size = Pt(32)
-        p.font.bold = True
-        p.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A)
+        prs = PptxPresentation()
 
-        # Body from content or notes
-        body_text = (s.content or s.notes or "").strip()
-        if body_text:
-            body_box = slide.shapes.add_textbox(Inches(0.7), Inches(2.0), Inches(12), Inches(4.5))
-            btf = body_box.text_frame
-            btf.word_wrap = True
-            bp = btf.paragraphs[0]
-            bp.text = body_text[:2000]
-            bp.font.size = Pt(16)
-            bp.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
+        # 16:9
+        prs.slide_width = Inches(13.333)
+        prs.slide_height = Inches(7.5)
 
-        # Speaker notes
-        if s.notes:
-            notes_slide = slide.notes_slide
-            notes_slide.notes_text_frame.text = s.notes
+        blank_layout = prs.slide_layouts[6]
 
-    buf = io.BytesIO()
-    prs.save(buf)
-    return buf.getvalue()
+        for slide_data in pres.slides:
+
+            slide_html = slide_data.html or ""
+
+            if not slide_html.strip():
+                slide_html = f"""
+                <div style="
+                    width:1600px;
+                    height:900px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-family:Arial;
+                    font-size:48px;
+                ">
+                    {_escape_html(slide_data.label or "Slide")}
+                </div>
+                """
+
+            document = _build_single_slide_document(
+                slide_html
+            )
+
+            await page.set_content(
+                document,
+                wait_until="networkidle",
+            )
+
+            await page.evaluate(
+                """
+                async () => {
+                    if (document.fonts) {
+                        await document.fonts.ready;
+                    }
+
+                    const images = Array.from(document.images);
+
+                    await Promise.all(
+                        images.map(img => {
+                            if (img.complete) {
+                                return Promise.resolve();
+                            }
+
+                            return new Promise(resolve => {
+                                img.onload = resolve;
+                                img.onerror = resolve;
+                            });
+                        })
+                    );
+                }
+                """
+            )
+
+            await page.wait_for_timeout(100)
+
+            screenshot = await page.screenshot(
+                type="png",
+                full_page=False,
+                animations="disabled",
+            )
+
+            pptx_slide = prs.slides.add_slide(
+                blank_layout
+            )
+
+            # Full slide image.
+            pptx_slide.shapes.add_picture(
+                io.BytesIO(screenshot),
+                0,
+                0,
+                width=prs.slide_width,
+                height=prs.slide_height,
+            )
+
+            # Preserve speaker notes.
+            if slide_data.notes:
+                notes_slide = pptx_slide.notes_slide
+                notes_slide.notes_text_frame.text = (
+                    slide_data.notes
+                )
+
+        buffer = io.BytesIO()
+
+        prs.save(buffer)
+
+        await browser.close()
+
+        return buffer.getvalue()
 
 
-def _esc(t: str) -> str:
+def _build_single_slide_document(
+        slide_html: str,
+) -> str:
+
+    return f"""
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+html,
+body {{
+    margin: 0;
+    padding: 0;
+
+    width: 1600px;
+    height: 900px;
+
+    overflow: hidden;
+}}
+
+body {{
+    width: 1600px;
+    height: 900px;
+}}
+
+* {{
+    box-sizing: border-box;
+}}
+
+</style>
+
+</head>
+
+<body>
+
+{slide_html}
+
+</body>
+
+</html>
+"""
+
+
+def _escape_html(value: str) -> str:
     return (
-        (t or "")
+        (value or "")
         .replace("&", "&amp;")
         .replace("<", "&lt;")
         .replace(">", "&gt;")
         .replace('"', "&quot;")
+        .replace("'", "&#39;")
     )

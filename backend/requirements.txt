@@ -20,3 +20,6 @@ microsoft-kiota-abstractions>=1.8.4
 microsoft-agents-m365copilot>=0.2.0
 Werkzeug
 openai
+playwright
+python-pptx
+reportlab

@@ -18,6 +18,7 @@ import {
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
 import { InputText } from 'primeng/inputtext';
+import {PrimeTemplate} from "primeng/api";
 
 @Component({
   selector: 'app-outline',
@@ -27,7 +28,8 @@ import { InputText } from 'primeng/inputtext';
     FormsModule,
     Select,
     Textarea,
-    InputText
+    InputText,
+    PrimeTemplate
   ],
   templateUrl: './outline.component.html',
   styleUrl: './outline.component.css'
@@ -132,11 +134,13 @@ export class OutlineComponent implements OnInit {
       slides: this.slides
     });
   }
-
   get paletteOptions() {
     return this.palettes.map((palette, index) => ({
       label: palette.name?.trim() || `Palette ${index + 1}`,
-      value: index
+      value: index,
+      entries: Object.entries(palette).filter(
+          ([key]) => key !== 'name'
+      )
     }));
   }
 

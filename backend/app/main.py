@@ -1,15 +1,13 @@
-"""
-AI Presentation Generator – FastAPI backend
+import sys
+import asyncio
 
-Two-phase flow:
-  1. POST /api/outline          → content plan (user reviews)
-  2. POST /api/generate-html    → HTML for every slide (independent prompts)
-"""
-
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(
+        asyncio.WindowsProactorEventLoopPolicy()
+    )
 import io
 import re
 import logging
-
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -166,22 +164,55 @@ async def api_regenerate_slide(req: RegenerateSlideRequest):
 async def api_export(req: ExportRequest):
     try:
         fmt = (req.format or "pptx").lower()
-        data = await export_presentation(req.presentation, fmt)
-        safe = re.sub(r"[^\w\-]+", "_", (req.presentation.title or "presentation")[:40]).strip("_") or "presentation"
-        if fmt == "html":
-            media = "text/html"
-            filename = f"{safe}.html"
-        elif fmt == "pdf":
-            media = "application/pdf"
+
+        if fmt not in {"pdf", "pptx"}:
+            raise HTTPException(
+                status_code=400,
+                detail="Only PDF and PPTX exports are supported.",
+            )
+
+        data = await export_presentation(
+            req.presentation,
+            fmt,
+        )
+
+        safe = (
+                re.sub(
+                    r"[^\w\-]+",
+                    "_",
+                    (req.presentation.title or "presentation")[:40],
+                )
+                .strip("_")
+                or "presentation"
+        )
+
+        if fmt == "pdf":
+            media_type = "application/pdf"
             filename = f"{safe}.pdf"
+
         else:
-            media = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            media_type = (
+                "application/vnd.openxmlformats-officedocument."
+                "presentationml.presentation"
+            )
             filename = f"{safe}.pptx"
+
         return StreamingResponse(
             io.BytesIO(data),
-            media_type=media,
-            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+            media_type=media_type,
+            headers={
+                "Content-Disposition":
+                    f'attachment; filename="{filename}"'
+            },
         )
+
+    except HTTPException:
+        raise
+
     except Exception as e:
         logger.exception("Export failed")
-        raise HTTPException(status_code=500, detail=str(e))
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )

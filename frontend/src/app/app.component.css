@@ -3,19 +3,11 @@
     min-height: 100vh;
 }
 
-/* =========================================================
-   APP BACKGROUND
-   Inspired by the first reference:
-   soft blue/gray Apple-like background
-   ========================================================= */
 
 .app-shell {
     min-height: 100vh;
     position: relative;
     overflow: hidden;
-
-    /* Diagonal blend shifting from bright white (top-left/bottom-right)
-       to soft slate-lavender hues in the middle core */
     background: linear-gradient(
             135deg,
             #ffffff 0%,
@@ -28,7 +20,6 @@
     color: #172033;
 }
 
-/* Soft light wash in top-left */
 .app-shell::before {
     content: "";
     position: absolute;
@@ -186,24 +177,16 @@
     background: #ef6f79;
 }
 
-/* =========================================================
-   MAIN CONTENT
-   ========================================================= */
-
 .app-content {
     position: relative;
     z-index: 2;
 
-    width: min(1180px, calc(100% - 48px));
+    width:100%;
 
     margin: 0 auto;
 
-    padding: 70px 0 100px;
+    padding: 3vw  7vw;
 }
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
 
 @media (max-width: 700px) {
 

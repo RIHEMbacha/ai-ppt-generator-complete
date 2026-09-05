@@ -134,7 +134,6 @@
                     <small>Generated presentation colors</small>
                 </div>
             </div>
-
             <div class="palette-controls">
                 <p-select
                         [(ngModel)]="selectedPaletteIndex"
@@ -144,23 +143,50 @@
                         (ngModelChange)="onPaletteChange($event)"
                         styleClass="palette-select"
                         appendTo="body"
-                />
+                >
+
+                    <!-- Dropdown options -->
+                    <ng-template pTemplate="item" let-option>
+                        <div class="palette-option">
+        <span class="palette-option-title">
+          {{ option.label }}
+        </span>
+
+                            <div class="palette-option-colors">
+                                @for (entry of option.entries; track entry[0]) {
+                                    <span
+                                            class="palette-option-swatch"
+                                            [style.background-color]="entry[1]"
+                                            [title]="entry[0] + ': ' + entry[1]"
+                                    ></span>
+                                }
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <!-- Selected option -->
+                    <ng-template pTemplate="selectedItem" let-option>
+                        @if (option) {
+                            <div class="palette-option">
+          <span class="palette-option-title">
+            {{ option.label }}
+          </span>
+
+                                <div class="palette-option-colors">
+                                    @for (entry of option.entries; track entry[0]) {
+                                        <span
+                                                class="palette-option-swatch"
+                                                [style.background-color]="entry[1]"
+                                                [title]="entry[0] + ': ' + entry[1]"
+                                        ></span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </ng-template>
+
+                </p-select>
             </div>
-
-            <div class="palette-preview">
-
-                @for (entry of selectedPaletteEntries(); track entry[0]) {
-
-                    <div
-                            class="swatch"
-                            [style.background]="entry[1]"
-                            [title]="entry[0] + ': ' + entry[1]"
-                    ></div>
-
-                }
-
-            </div>
-
         </div>
 
     </div>
