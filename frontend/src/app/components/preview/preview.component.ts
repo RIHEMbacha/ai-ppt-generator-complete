@@ -131,7 +131,7 @@ export class PreviewComponent implements OnInit, AfterViewChecked {
       });
   }
 
-  export(fmt: 'pptx' | 'html') {
+  export(fmt: 'pptx' | 'pdf' | 'html') {
     const p = this.presentation;
     if (!p) return;
     this.exporting = true;

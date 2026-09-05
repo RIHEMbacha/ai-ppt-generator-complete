@@ -10,7 +10,9 @@ import {
   LAYOUT_HINTS,
   ImageCandidate,
   ConfirmOutlineRequest,
-  Presentation, OutlineResponse
+  Presentation,
+  OutlineResponse,
+  Palette
 } from '../../models/presentation.models';
 
 import { Select } from 'primeng/select';
@@ -42,6 +44,8 @@ export class OutlineComponent implements OnInit {
   date: string | null = null;
 
   slides: SlideContent[] = [];
+  palettes: Palette[] = [];
+  selectedPaletteIndex = 0;
 
   palette: Record<string, string> = {};
 
@@ -83,7 +87,30 @@ export class OutlineComponent implements OnInit {
           : null
     }));
 
-    this.palette = outline.palette || {};
+    this.palettes = Array.isArray(outline.palettes)
+      ? [...outline.palettes]
+      : [];
+
+    if (!this.palettes.length && outline.palette) {
+      this.palettes = [
+        {
+          name: 'Default palette',
+          bg: outline.palette['bg'] || '#0B1426',
+          surface: outline.palette['surface'] || '#132040',
+          primary: outline.palette['primary'] || '#1E3A6E',
+          accent: outline.palette['accent'] || '#D4A843',
+          text: outline.palette['text'] || '#F0F4FA',
+          muted: outline.palette['muted'] || '#7A8BA8',
+        }
+      ];
+    }
+
+    const initialIndex = Number.isInteger(outline.selected_palette_index)
+      ? Number(outline.selected_palette_index)
+      : 0;
+
+    this.applySelectedPalette(initialIndex, false);
+    this.saveChanges();
   }
 
   saveChanges() {
@@ -98,14 +125,70 @@ export class OutlineComponent implements OnInit {
 
       date: this.date?.trim() || null,
 
+      palettes: [...this.palettes],
       palette: { ...this.palette },
+      selected_palette_index: this.selectedPaletteIndex,
 
       slides: this.slides
     });
   }
 
-  paletteEntries() {
-    return Object.entries(this.palette);
+  get paletteOptions() {
+    return this.palettes.map((palette, index) => ({
+      label: palette.name?.trim() || `Palette ${index + 1}`,
+      value: index
+    }));
+  }
+
+  selectedPaletteEntries() {
+    return Object.entries(this.palette).filter(
+      ([key]) => key !== 'name'
+    );
+  }
+
+  onPaletteChange(index: number) {
+    this.applySelectedPalette(index);
+  }
+
+  private applySelectedPalette(
+    index: number,
+    persist = true
+  ) {
+    if (!this.palettes.length) {
+      this.selectedPaletteIndex = 0;
+      this.palette = {};
+
+      if (persist) {
+        this.saveChanges();
+      }
+
+      return;
+    }
+
+    const safeIndex = Math.max(
+      0,
+      Math.min(
+        index,
+        this.palettes.length - 1
+      )
+    );
+
+    const selected = this.palettes[safeIndex];
+
+    this.selectedPaletteIndex = safeIndex;
+    this.palette = {
+      name: selected.name,
+      bg: selected.bg,
+      surface: selected.surface,
+      primary: selected.primary,
+      accent: selected.accent,
+      text: selected.text,
+      muted: selected.muted
+    };
+
+    if (persist) {
+      this.saveChanges();
+    }
   }
 
   setPresentersFromInput(value: string) {
@@ -259,7 +342,9 @@ export class OutlineComponent implements OnInit {
 
       date: this.date?.trim() || null,
 
+      palettes: [...this.palettes],
       palette: { ...this.palette },
+      selected_palette_index: this.selectedPaletteIndex,
 
       slides
     };
@@ -270,6 +355,9 @@ export class OutlineComponent implements OnInit {
       title: outline.title,
 
       subtitle: outline.subtitle,
+
+      presenters: outline.presenters,
+      date: outline.date,
 
       tone: this.state.tone(),
 

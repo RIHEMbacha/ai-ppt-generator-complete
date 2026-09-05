@@ -13,7 +13,7 @@ class ImageCandidate(BaseModel):
 
 class ContentPoint(BaseModel):
     point: str
-    explanation: str
+    explanation: str = ""
 
 class ImageSelection(BaseModel):
     query: str = ""
@@ -31,44 +31,23 @@ class SlideContent(BaseModel):
     image_query: str = ""
     image_selection: Optional[ImageSelection] = None
 
-class ConfirmOutlineRequest(BaseModel):
-
-    title: str
-
-    subtitle: str = ""
-
-    presenters: List[str] = Field(
-        default_factory=list
-    )
-
-    date: Optional[str] = None
-
-    tone: str = "professional"
-
-    palette: Dict[str, str] = Field(
-        default_factory=dict
-    )
-
-    slides: List[SlideContent] = Field(
-        default_factory=list
-    )
+class Palette(BaseModel):
+    name: str
+    bg: str
+    surface: str
+    primary: str
+    accent: str
+    text: str
+    muted: str
 
 
 class OutlineResponse(BaseModel):
-    """Returned by /api/outline — user reviews and confirms this."""
-
-    title: str = "Presentation"
-
-    subtitle: str = ""
-
-    presenters: List[str] = Field(default_factory=list)
-
+    title: str
+    subtitle: str
+    presenters: List[str]
     date: Optional[str] = None
-
-    palette: Dict[str, str] = Field(default_factory=dict)
-
-    slides: List[SlideContent] = Field(default_factory=list)
-
+    palettes: List[Palette]
+    slides: List[SlideContent]
 
 class GenerateOutlineRequest(BaseModel):
     prompt: str
@@ -120,4 +99,4 @@ class RegenerateSlideRequest(BaseModel):
 
 class ExportRequest(BaseModel):
     presentation: Presentation
-    format: str = "pptx"  # pptx | html
+    format: str = "pptx"  # pptx | pdf | html

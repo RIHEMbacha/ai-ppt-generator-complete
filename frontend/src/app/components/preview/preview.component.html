@@ -37,13 +37,13 @@
                 />
 
                 <p-button
-                        label="Export HTML"
-                        icon="pi pi-code"
+                        label="Export PDF"
+                        icon="pi pi-file-pdf"
                         [outlined]="true"
                         severity="secondary"
                         [loading]="exporting"
                         [disabled]="exporting"
-                        (onClick)="export('html')"
+                        (onClick)="export('pdf')"
                         styleClass="header-btn"
                 />
 
@@ -55,6 +55,17 @@
                         [disabled]="exporting"
                         (onClick)="export('pptx')"
                         styleClass="header-btn export-btn"
+                />
+
+                <p-button
+                        label="Export HTML"
+                        icon="pi pi-code"
+                        [outlined]="true"
+                        severity="secondary"
+                        [loading]="exporting"
+                        [disabled]="exporting"
+                        (onClick)="export('html')"
+                        styleClass="header-btn"
                 />
 
             </div>
@@ -133,19 +144,16 @@
             <main class="preview-workspace">
 
 
-                <!-- =================================================
-                     SLIDE PREVIEW
-                     ================================================= -->
 
-                    <div
-                            class="slide-frame "
-                            #slideFrame
-                    >
+                <div class="slide-preview-with-notes">
+
+                    <!-- SLIDE -->
+                    <div class="slide-frame" #slideFrame>
 
                         @if (currentSlide) {
 
                             <div
-                                    class="slide-inner "
+                                    class="slide-inner"
                                     [style.transform]="'scale(' + scale + ')'"
                                     [innerHTML]="safeHtml(currentSlide.html)"
                             ></div>
@@ -154,13 +162,13 @@
 
                             <div class="empty-slide">
 
-                                <span class="empty-icon">
-                                    <i class="pi pi-image"></i>
-                                </span>
+                <span class="empty-icon">
+                    <i class="pi pi-image"></i>
+                </span>
 
                                 <span>
-                                    No slide selected
-                                </span>
+                    No slide selected
+                </span>
 
                             </div>
 
@@ -168,6 +176,8 @@
 
                     </div>
 
+
+                </div>
                 <div class="slide-navigation ">
 
                     <p-button
@@ -296,6 +306,30 @@
                 }
 
             </main>
+            @if (currentSlide?.notes) {
+
+                <aside class="presenter-notes-card">
+
+                    <div class="presenter-notes-header">
+
+                        <div class="presenter-notes-icon">
+                            <i class="pi pi-microphone"></i>
+                        </div>
+
+                        <div>
+                            <strong>Presenter notes</strong>
+                            <span>Speaking guidance</span>
+                        </div>
+
+                    </div>
+
+                    <div class="presenter-notes-content">
+                        {{ currentSlide?.notes }}
+                    </div>
+
+                </aside>
+
+            }
 
         </div>
 

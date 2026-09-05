@@ -235,6 +235,21 @@
     cursor: pointer;
 }
 
+.ai-badge:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.hidden-document-input {
+    display: none;
+}
+
+.document-name {
+    margin-bottom: 10px;
+    color: #69778d;
+    font-size: 12px;
+}
+
 
 /* =========================================================
    TEXTAREA
@@ -577,7 +592,132 @@
     font-size: 13px;
 }
 
+.hidden-document-input {
+    display: none;
+}
 
+.document-drop-zone {
+    width: 100%;
+    min-height: 220px;
+    border: 2px dashed rgba(99, 102, 241, 0.35);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: rgba(99, 102, 241, 0.03);
+}
+
+.document-drop-zone:hover {
+    border-color: rgba(99, 102, 241, 0.75);
+    background: rgba(99, 102, 241, 0.07);
+    transform: translateY(-1px);
+}
+
+.document-drop-zone.has-file {
+    border-style: solid;
+}
+
+.drop-content {
+    text-align: center;
+}
+
+.upload-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.upload-icon i {
+    font-size: 28px;
+    color: #6366f1;
+}
+
+.drop-content h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.drop-content p {
+    margin: 0 0 8px;
+    color: #6b7280;
+}
+
+.drop-content p span {
+    color: #6366f1;
+    font-weight: 600;
+}
+
+.drop-content small {
+    color: #9ca3af;
+}
+
+.selected-file {
+    width: calc(100% - 40px);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.08);
+}
+
+.file-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(99, 102, 241, 0.15);
+}
+
+.file-icon i {
+    font-size: 22px;
+    color: #6366f1;
+}
+
+.file-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.file-info strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-info span {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.remove-file {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    color: #6b7280;
+}
+
+.remove-file:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #ef4444;
+}
 /* =========================================================
    RESPONSIVE
    ========================================================= */

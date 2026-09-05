@@ -135,9 +135,21 @@
                 </div>
             </div>
 
+            <div class="palette-controls">
+                <p-select
+                        [(ngModel)]="selectedPaletteIndex"
+                        [options]="paletteOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        (ngModelChange)="onPaletteChange($event)"
+                        styleClass="palette-select"
+                        appendTo="body"
+                />
+            </div>
+
             <div class="palette-preview">
 
-                @for (entry of paletteEntries(); track entry[0]) {
+                @for (entry of selectedPaletteEntries(); track entry[0]) {
 
                     <div
                             class="swatch"

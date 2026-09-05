@@ -1,6 +1,7 @@
 """LLM provider router."""
 
 import logging
+from app.services.llm.json_utils import extract_json
 
 from app.config import settings
 
@@ -14,40 +15,33 @@ from .openrouter import call_openrouter
 logger = logging.getLogger("llm")
 
 
-def call_llm(system: str, user: str, max_tokens: int = 4000) -> str:
-    provider = (settings.LLM_PROVIDER or "gemini").lower().strip()
-    logger.info("LLM provider=%s max_tokens=%d user_len=%d", provider, max_tokens, len(user))
+def call_llm(system: str, user: str, max_tokens: int = 4000):
+    providers = ["gemini", "openrouter", "azure_openai", "groq", "huggingface"]
 
-    if provider == "groq":
-        return call_groq(system, user, max_tokens)
-    if provider == "ollama":
-        return call_ollama(system, user, max_tokens)
-    if provider == "gemini":
-        text, _ = call_gemini(system, user, max_tokens)
-        return text
-    if provider in ("azure_openai", "azure-openai", "azure"):
-        return call_azure_openai(system, user, max_tokens)
-    if provider in ("openrouter", "open_router"):
-        return call_openrouter(system, user, max_tokens)
-    if provider in ("huggingface", "hf", "hugging_face"):
-        return call_huggingface(system, user, max_tokens)
-    raise ValueError(f"Unknown LLM_PROVIDER: {provider}")
+    # Put configured provider first
+    configured = (settings.LLM_PROVIDER or "gemini").lower().strip()
+    providers.remove(configured)
+    providers.insert(0, configured)
 
+    for provider in providers:
+        try:
+            if provider == "gemini":
+                text, _ = call_gemini(system, user, max_tokens)
+            elif provider in ("openrouter", "open_router"):
+                text = call_openrouter(system, user, max_tokens)
+            elif provider in ("azure_openai", "azure-openai", "azure"):
+                text = call_azure_openai(system, user, max_tokens)
+            elif provider == "groq":
+                text = call_groq(system, user, max_tokens)
+            elif provider in ("huggingface", "hf", "hugging_face"):
+                text = call_huggingface(system, user, max_tokens)
+            else:
+                continue
+            logger.info("Provider %s: %s", provider, text)
+            return extract_json(text)
 
-def call_llm_with_meta(system: str, user: str, max_tokens: int = 4000) -> tuple:
-    provider = (settings.LLM_PROVIDER or "gemini").lower().strip()
-    logger.info("LLM provider=%s max_tokens=%d user_len=%d", provider, max_tokens, len(user))
+        except Exception as e:
+            logger.warning("Provider %s failed: %s", provider, e)
+            continue
 
-    if provider == "gemini":
-        return call_gemini(system, user, max_tokens)
-    if provider == "groq":
-        return call_groq(system, user, max_tokens), ""
-    if provider == "ollama":
-        return call_ollama(system, user, max_tokens), ""
-    if provider in ("azure_openai", "azure-openai", "azure"):
-        return call_azure_openai(system, user, max_tokens), ""
-    if provider in ("openrouter", "open_router"):
-        return call_openrouter(system, user, max_tokens), ""
-    if provider in ("huggingface", "hf", "hugging_face"):
-        return call_huggingface(system, user, max_tokens), ""
-    raise ValueError(f"Unknown LLM_PROVIDER: {provider}")
+    raise RuntimeError("All LLM providers failed")

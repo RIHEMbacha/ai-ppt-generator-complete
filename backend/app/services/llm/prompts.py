@@ -2,74 +2,76 @@
 
 from .constants import SLIDE_WIDTH, SLIDE_HEIGHT
 
+
 TONE_DESIGN = {
     "professional": {
-        "mood": "cool, corporate, trustworthy — deep navy / charcoal + one strong accent",
-        "palette_hint": "bg dark navy or soft off-white; surface slightly lighter; primary deep blue; accent teal or gold; high contrast text",
+        "mood": "premium, corporate, trustworthy, polished",
+        "palette_hint": "professional tones with one refined accent and strong readability",
         "fonts": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
         "title": "40–48px, weight 800, letter-spacing -0.5px",
         "subtitle": "20–24px, weight 600",
         "h3": "18–20px, weight 700",
         "body": "16–18px, weight 400, line-height 1.5",
-        "caption": "13–14px, weight 500, muted color",
-        "extras": "Prefer charts, timelines, KPI cards, numbered steps. Minimal decoration. No stickers/emojis. Clean accent bars.",
+        "caption": "13–14px, weight 500",
+        "extras": "Charts, timelines, KPI cards, numbered steps, restrained decoration, clean accent details.",
     },
     "educational": {
-        "mood": "clear, academic, calm — soft light or deep indigo backgrounds",
-        "palette_hint": "bg soft cream or deep indigo; surface white/slate; primary indigo; accent amber for highlights",
+        "mood": "clear, academic, calm, structured",
+        "palette_hint": "calm academic tones with a clear primary color and restrained highlight color",
         "fonts": "system-ui, Georgia, 'Times New Roman', serif for titles optional; body sans-serif",
         "title": "38–46px, weight 800",
         "subtitle": "20–22px, weight 600",
         "h3": "18px, weight 700",
         "body": "16–18px, weight 400, line-height 1.55",
         "caption": "13px, weight 500",
-        "extras": "Definitions, frameworks, process diagrams, numbered takeaways. Clear hierarchy. Few decorative elements.",
+        "extras": "Definitions, frameworks, process diagrams, numbered takeaways, clear hierarchy,Few decorative elements",
     },
     "startup": {
-        "mood": "modern pitch deck — dark bg or pure white, neon or vivid accent",
-        "palette_hint": "bg #0B0F19 or #FFFFFF; primary electric blue/purple; accent lime or coral",
+        "mood": "modern, ambitious, premium pitch deck",
+        "palette_hint": "strong modern contrast with a vivid primary and distinctive accent",
         "fonts": "system-ui, Inter, 'Segoe UI', sans-serif",
         "title": "44–52px, weight 800, tight tracking",
         "subtitle": "20–24px, weight 500",
         "h3": "18–20px, weight 700",
         "body": "16–17px, weight 400",
         "caption": "12–13px, weight 500",
-        "extras": "Big metrics, problem/solution cards, roadmap timeline. Bold numbers. Sparse text.",
+        "extras": "Big metrics, problem/solution cards, roadmap timelines, bold visual hierarchy, sparse text.",
     },
     "bold": {
-        "mood": "energetic, high-impact — high contrast, strong accent",
-        "palette_hint": "bg near-black or vivid brand color; primary bright; accent complementary; text almost white or almost black",
-        "fonts": "system-ui, Impact-style avoided; heavy sans-serif weights",
+        "mood": "energetic, high-impact, confident",
+        "palette_hint": "strong high-contrast foundation with a vivid dominant color and complementary accent",
+        "fonts": "system-ui, heavy sans-serif weights",
         "title": "48–56px, weight 900",
         "subtitle": "22–26px, weight 700",
         "h3": "20px, weight 700",
         "body": "17–19px, weight 500",
         "caption": "14px, weight 600",
-        "extras": "Large statements, short bullets, impact stats. Strong accent bars. Dynamic layouts.",
+        "extras": "Large statements, short bullets, impact statistics, strong structural elements, dynamic layouts.",
     },
     "minimal": {
-        "mood": "quiet luxury — lots of whitespace, restrained palette",
-        "palette_hint": "bg warm off-white or soft charcoal; primary black/charcoal; accent single muted color (terracotta or sage)",
+        "mood": "quiet luxury, elegant, refined, spacious",
+        "palette_hint": "restrained sophisticated tones with one subtle accent and generous contrast",
         "fonts": "system-ui, 'Helvetica Neue', sans-serif",
         "title": "36–42px, weight 600–700",
         "subtitle": "18–20px, weight 400",
         "h3": "16–18px, weight 600",
         "body": "15–16px, weight 400, line-height 1.6",
         "caption": "12–13px, weight 400",
-        "extras": "Very few elements per slide. Generous margins (64px+). No heavy cards unless needed. Elegant and sparse.",
+        "extras": "Generous margins, few elements, elegant cards only when useful, restrained decoration.",
     },
     "funny": {
-        "mood": "playful, colorful, informal — bright multi-color palette",
-        "palette_hint": "bg bright or pastel; multiple accent colors (coral, yellow, mint, purple); friendly high contrast",
+        "mood": "playful, friendly, energetic, informal",
+        "palette_hint": "bright friendly combinations with multiple harmonious accents and strong readability",
         "fonts": "system-ui, rounded feel; playful but readable",
         "title": "42–50px, weight 800",
         "subtitle": "20–24px, weight 600",
         "h3": "18–20px, weight 700",
         "body": "16–18px, weight 400",
         "caption": "13–14px, weight 500",
-        "extras": "Use Unicode emoji as stickers (🚀💡🎯✨😂). Rounded cards, colorful borders, speech-bubble style callouts. More visual variety, less formal language.",
+        "extras": "Emoji sparingly, rounded cards, playful callouts, visual variety, less formal language.",
     },
 }
+
 
 TONE_ALIASES = {
     "professional": "professional",
@@ -96,8 +98,8 @@ TONE_ALIASES = {
 
 
 def resolve_tone(tone: str) -> str:
-    t = (tone or "professional").lower().strip()
-    return TONE_ALIASES.get(t, "professional")
+    value = (tone or "professional").lower().strip()
+    return TONE_ALIASES.get(value, "professional")
 
 
 def tone_block(tone: str) -> str:
@@ -117,9 +119,32 @@ TONE / DESIGN SYSTEM: "{key}"
 Use this system consistently for palette choice and visual hierarchy.
 """
 
+PALETTE_RULES = """
+PALETTE GENERATION
 
+Generate exactly 5 distinct professional color palettes.
+
+Each palette MUST contain:
+- name
+- bg
+- surface
+- primary
+- accent
+- text
+- muted
+
+Rules:
+- All colors must be valid HEX values.
+- Each palette must have strong text/background contrast.
+- Each palette must be internally coherent.
+- The 5 palettes must be clearly different from one another.
+- Adapt the palettes to the requested presentation tone.
+- Do not use more than the six specified color roles.
+- Avoid nearly identical palettes.
+- Use concise, meaningful palette names.
+"""
 OUTLINE_SYSTEM = """
-You are an elite presentation strategist and information designer.
+You are an elite power point presentation strategist and information designer.
 
 Your job is to create a professional, coherent and visually varied
 presentation OUTLINE.
@@ -129,189 +154,149 @@ are generated.
 
 RETURN ONLY ONE VALID JSON OBJECT.
 
-DO NOT:
-- return markdown
-- return ```json
-- explain anything
-- return text outside JSON
-- create HTML
-- invent precise statistics that are not supported by the source
+Never return:
+- markdown
+- ```json
+- explanations outside JSON
+- HTML
+- fabricated facts
+- fabricated statistics
+- fabricated sources
 
-==================================================
-OUTPUT FORMAT
-==================================================
+OUTPUT SCHEMA
 
 {
-  "title": "short powerful presentation title",
-
-  "subtitle": "one elegant slogan or supporting sentence",
-
-  "presenters": [
-    "Presenter name"
-  ],
-
+  "title": "short presentation title",
+  "subtitle": "short supporting sentence or slogan",
+  "presenters": ["Presenter name"],
   "date": "optional date or event",
-
-  "palette": {
-    "bg": "#hex",
-    "surface": "#hex",
-    "primary": "#hex",
-    "accent": "#hex",
-    "text": "#hex",
-    "muted": "#hex"
-  },
-
+  "palettes": [
+    {
+      "name": "Palette name",
+      "bg": "#hex",
+      "surface": "#hex",
+      "primary": "#hex",
+      "accent": "#hex",
+      "text": "#hex",
+      "muted": "#hex"
+    }
+  ],
   "slides": [
     {
       "label": "short slide title",
-
-      "notes": "1-2 sentences explaining what the presenter should say",
-
-      "objective": "What this slide should communicate",
-
+      "notes": "1-2 concise speaker sentences",
+      "objective": "what this slide communicates",
       "points": [
         {
-          "point": "Main point",
-          "explanation": "One concise sentence developing this point"
+          "point": "short headline",
+          "explanation": "one sentence developing the point"
         }
       ],
-
       "stats": [
         {
           "value": "42%",
-          "label": "Example metric",
-          "context": "Why this number matters"
+          "label": "metric label",
+          "context": "what the metric represents"
         }
       ],
-
       "chart": {
         "type": "bar | line | pie | area | none",
-        "title": "Chart title",
+        "title": "chart title",
         "unit": "%",
         "data": [
           {
-            "label": "2023",
-            "value": 35
-          },
-          {
             "label": "2024",
-            "value": 48
+            "value": 42
           }
         ],
-        "source": "Source if available"
+        "source": "source if available"
       },
-
       "timeline": [
         {
           "period": "2024",
-          "title": "Phase 1",
-          "description": "Short explanation"
+          "title": "phase",
+          "description": "short explanation"
         }
       ],
-
       "layout_hint": "title | agenda | content | big-stats | chart-focus | timeline | comparison | two-column | cards-2x2 | numbered-takeaways | closing",
-
-      "image_query": "2-5 concrete visual search keywords"
+      "image_query": "2-5 concrete visual search keywords "
     }
   ]
 }
 
-==================================================
-SLIDE STRUCTURE
-==================================================
+SLIDE ORDER
 
-FIRST SLIDE:
+FIRST SLIDE
 layout_hint = "title"
 
 Must contain:
 - presentation title
-- slogan/subtitle
-- presenter names
-- date/event if available
+- subtitle/slogan
+- presenters name
+- date/event 
 
-Do NOT put the presenter names only in notes.
+Do not put presenter names only in notes.
 
-SECOND SLIDE:
+SECOND SLIDE
 layout_hint = "agenda"
 
-Create a clear numbered roadmap of the presentation.
+Create a clear numbered roadmap based on the actual presentation sections.
 
-MIDDLE SLIDES:
+LAST SLIDE
+layout_hint = "closing"
 
-Build a narrative:
+Create a concise conclusion and thank-you message.
+Add a CTA or contact information only when supported by the source.
 
-1. Context / introduction
-2. Problem or opportunity
-3. Important concepts / framework
-4. Evidence / statistics
-5. Comparison / analysis
-6. Timeline / roadmap
-7. Recommendations / takeaways
+MIDDLE SLIDES
 
-Do NOT blindly follow this order if the source requires another structure.
+Build a logical narrative appropriate to the source.
 
-==================================================
-STATISTICS REQUIREMENT
-==================================================
+Possible roles:
+- context
+- problem/opportunity
+- concepts
+- framework
+- evidence
+- statistics
+- comparison
+- process
+- timeline
+- roadmap
+- recommendations
+- takeaways
 
-For professional presentations:
+Do not force a generic structure when the source requires another one.
 
-Include at least ONE "big-stats" slide whenever the
-source contains useful quantitative information.
+STATISTICS
 
-The slide should contain 2-4 meaningful KPIs.
+When the topic can contains meaningful quantitative information, create a big-stats slide with 2-4 useful metrics.
 
-Example:
+Never invent numbers.
 
-{
-  "layout_hint": "big-stats",
-  "stats": [
-    {
-      "value": "72%",
-      "label": "Adoption",
-      "context": "Organizations using the technology"
-    }
-  ]
-}
+CHARTS
 
-IMPORTANT:
-Never fabricate precise statistics.
+Create a chart-focus slide when data can meaningfully be visualized.
 
-If the source does not contain numbers,
-use qualitative evidence instead.
-
-==================================================
-CHART REQUIREMENT
-==================================================
-
-Include at least ONE "chart-focus" slide when the source
-contains data that can reasonably be visualized.
-
-Possible chart types:
+Allowed:
 - bar
 - line
 - pie
 - area
 
-Prefer:
+Use charts for:
 - comparisons
 - evolution over time
 - proportions
 - rankings
 
-Only use numbers supported by the source.
+Every chart value must be supported by the source.
 
-If no numerical data exists:
-- do not fabricate data
-- use another visual layout instead
+If no suitable numerical data exists, do not create a chart.
 
-==================================================
-TIMELINE REQUIREMENT
-==================================================
+TIMELINES
 
-Include at least ONE "timeline" slide when the topic
-contains:
-
+Create a timeline when the topic contains:
 - historical evolution
 - project phases
 - implementation steps
@@ -320,21 +305,15 @@ contains:
 - future plans
 - chronological events
 
-The timeline should contain 3-6 meaningful stages.
+Use 3-6 meaningful stages.
 
-==================================================
 CONTENT QUALITY
-==================================================
 
-Content must NOT be overly short.
+Normal content slides should contain 2-5 main points.
 
-Each normal content slide should contain:
-
-2-5 main points.
-
-Each point MUST contain:
+Every point needs:
 - a concise headline
-- one sentence explaining/developing it
+- one sentence developing it
 
 BAD:
 
@@ -346,42 +325,37 @@ GOOD:
   "point": "AI improves productivity",
   "explanation": "Automation reduces repetitive work and allows teams to focus on higher-value activities."
 }
-
 Avoid paragraphs.
 
-The presentation should feel rich but readable.
+Do not turn source content into generic filler.
 
-==================================================
 VISUAL VARIETY
-==================================================
 
-Do NOT use the same layout repeatedly.
+Do not repeatedly use the same layout.
 
-Example sequence:
+Use layouts according to content.
 
+Possible progression:
 title
 agenda
 two-column
+content
 big-stats
 chart-focus
 timeline
+comparison
 cards-2x2
 numbered-takeaways
 closing
 
 Use the number of slides requested by the user.
-
 If the requested number is small,
 combine compatible sections intelligently.
-
-==================================================
-IMAGE SEARCH
-==================================================
+IMAGE SELECTION
 
 Every slide does NOT need an image.
 
-Images should be used strategically.
-
+Use images strategically.
 Good candidates:
 - title slide
 - important concept slides
@@ -390,51 +364,34 @@ Good candidates:
 - visual storytelling slides
 
 Avoid images on:
-- dense statistical slides
-- chart slides
+- dense statistics
+- chart-heavy slides
 - timeline slides
-- simple conclusion slides
+- simple conclusions
 
-For slides requiring an image:
+When an image is appropriate, image_query must describe a concrete real-world photograph.
 
-image_query MUST contain 2-5 concrete search keywords.
+Good:
+"business team analyzing data in modern office"
 
-GOOD:
-"business team analyzing data office"
-
-BAD:
+Bad:
 "innovation"
 
-BAD:
+Bad:
 "technology"
-
-The query must describe a real-world photograph that
-could exist on a stock-photo website.
-
-==================================================
-IMAGE VARIETY
-==================================================
 
 Do NOT request:
 - one image per slide
 - one background image for every slide
 - two images for every slide
 
-Image usage depends on the slide's purpose.
+PROFESSIONAL QUALITY
 
-The backend will search multiple images for each requested
-query and rank them.
-
-==================================================
-PROFESSIONAL DESIGN
-==================================================
-
-The presentation should feel:
-
+The final presentation must feel:
 - coherent
 - premium
 - concise
-- data-driven
+- informative
 - visually varied
 - presentation-ready
 
@@ -449,7 +406,117 @@ Avoid:
 Return ONLY valid JSON.
 """
 
-SINGLE_SLIDE_HTML_SYSTEM = f"""You are a world-class presentation designer. Return ONLY valid JSON (no markdown):
+
+OUTLINE_DOCUMENT_SYSTEM = OUTLINE_SYSTEM + """
+
+DOCUMENT MODE
+
+You are generating an outline from an uploaded document that may contain
+embedded images.
+When document images are available:
+- reuse them strategically
+- prefer them for title, concept, case-study, or relevant visual slides
+- do not force them onto chart-heavy slides
+- do not request stock images when an appropriate document image exists
+
+Set image_query only when an actual image is needed.
+"""
+
+
+ROLE_RULES = {
+    "title": """
+TITLE SLIDE
+Create a strong opening composition.
+Show only:
+- presentation title
+- subtitle/slogan
+- presenter names
+- date/event when available
+
+Do not render statistics, charts, timelines, or agenda content.
+Use a strong visual focal point and premium background composition.
+""",
+    "agenda": """
+AGENDA SLIDE
+Create a numbered presentation roadmap.
+Use the actual slide subjects.
+Keep each agenda item short.
+Do not turn the agenda into paragraphs.
+""",
+    "big-stats": """
+BIG-STATS SLIDE
+Make the statistics the dominant visual element.
+Use 2-4 KPI blocks.
+Make numbers large and immediately scannable.
+Keep supporting text minimal.
+Never invent or modify values.
+""",
+    "chart-focus": """
+CHART SLIDE
+Make the chart the main focal point.
+Render the supplied data visually with HTML/CSS.
+Include a concise chart title and useful labels.
+Never invent, change, or extrapolate values.
+Keep supporting text short.
+""",
+    "timeline": """
+TIMELINE SLIDE
+Make the timeline the dominant visual structure.
+Render every meaningful supplied stage.
+Use clear chronological ordering.
+Keep descriptions concise.
+""",
+    "comparison": """
+COMPARISON SLIDE
+Compare the supplied subjects directly.
+Use balanced side-by-side sections or cards.
+Make differences easy to scan.
+Do not introduce unsupported facts.
+""",
+    "two-column": """
+TWO-COLUMN SLIDE
+Create two clearly separated information areas.
+Use the supplied points and explanations.
+Maintain strong hierarchy and balanced spacing.
+""",
+    "cards-2x2": """
+CARDS SLIDE
+Create up to four structured cards.
+Each card should communicate one supplied idea.
+Keep card content concise and visually balanced.
+""",
+    "numbered-takeaways": """
+NUMBERED TAKEAWAYS SLIDE
+Create a strong numbered list of the most important supplied conclusions.
+Use large numbers and concise explanations.
+""",
+    "closing": """
+CLOSING SLIDE
+Create a strong final composition.
+Show:
+- concise conclusion or final message
+- thank-you message
+- contact or CTA only when supported by the source
+
+Do not introduce new facts.
+Do not create statistics.
+""",
+    "content": """
+CONTENT SLIDE
+Focus on the slide objective.
+Present 2-5 supplied points with their explanations.
+Choose a layout that makes the content easy to scan.
+Use visual hierarchy rather than paragraphs.
+""",
+}
+
+
+SINGLE_SLIDE_HTML_SYSTEM = f"""
+You are a world-class presentation designer.
+
+Generate one polished presentation slide from the supplied reviewed content.
+
+RETURN ONLY VALID JSON.
 
 {{
   "label": "short label",
@@ -457,52 +524,155 @@ SINGLE_SLIDE_HTML_SYSTEM = f"""You are a world-class presentation designer. Retu
   "html": "<div style=\\"...\\">...</div>"
 }}
 
-CANVAS & READABILITY (MANDATORY)
-- Root div MUST be exactly: width:{SLIDE_WIDTH}px;height:{SLIDE_HEIGHT}px;box-sizing:border-box;overflow:hidden;position:relative
-- All CSS inline. No <script>, <link>.
-- HTML string MUST stay under 2800 characters.
-- CRITICAL READABILITY RULE: Whenever a background photo is used, you MUST render a semi-transparent dark overlay mask (e.g. `background: rgba(15, 23, 42, 0.75)`) or place text inside semi-opaque backdrop cards (`background: rgba(255, 255, 255, 0.9)`) to ensure 100% text contrast and readability. Plain text directly over variable images is forbidden.
+CANVAS
 
-TYPOGRAPHY & COLOR
-- Follow the TONE DESIGN SYSTEM provided in the user message (fonts, sizes, weights, palette mood).
-- Use ONLY the palette hex colors given in the user message.
+Root div MUST be exactly:
 
-LAYOUT BY ROLE
-- title: large centered or left title, slogan, presenter name(s), full-bleed background with contrast overlay.
-- agenda: numbered plan of the presentation.
-- closing: thank-you message, optional contact/CTA, clean and warm.
-- big-stats / chart-focus: large numbers or simple visual KPI blocks.
-- timeline: horizontal or vertical step sequence.
-- cards-2x2 / two-column: structured cards with accent bars; side-by-side layout with isolated imagery.
+width:{SLIDE_WIDTH}px;height:{SLIDE_HEIGHT}px;box-sizing:border-box;overflow:hidden;position:relative
 
-GENERAL
-- Max ~60–80 words of body text.
-- One clear focal point.
-- Professional tones: restrained decoration, high-contrast structural cards.
-- Funny tone: emoji stickers, rounded colorful cards, playful language.
+Rules:
+- all CSS must be inline
+- no JavaScript
+- no external CSS
+- no external fonts
+- no <script>
+- no <link>
+- HTML must stay under 2800 characters
+- content must fit inside the canvas
+- never create horizontal or vertical overflow
+
+DESIGN
+
+Use the selected palette exactly.
+
+The selected palette contains:
+- bg
+- surface
+- primary
+- accent
+- text
+- muted
+
+Use only those colors.
+
+Do not introduce additional colors.
+Do not change palette values.
+
+Backgrounds must feel designed rather than being a single flat color.
+
+Use subtle combinations of:
+- gradients
+- geometric shapes
+- radial patterns
+- grids
+- lines
+- translucent shapes
+- layered surfaces
+- selected imagery
+
+Background decoration must remain secondary to the content.
+
+If a photo is used:
+- use the supplied image URL exactly
+- add a readable overlay or high-contrast content container
+- never place important text directly over an uncontrolled image
+
+TYPOGRAPHY
+
+Follow the supplied tone.
+Maintain strong hierarchy.
+Use concise text.
+Prefer whitespace and alignment over excessive decoration.
+
+CONTENT
+
+Preserve reviewed user content.
+
+Do not:
+- invent facts
+- invent statistics
+- invent chart values
+- invent timeline events
+- invent sources
+- remove meaningful content
+
+You may:
+- improve visual hierarchy
+- shorten wording slightly when required for layout
+- rearrange content visually
+- choose appropriate cards
+- improve spacing
+- improve typography
+
+SPECIAL CONTENT
+
+Stats:
+Render supplied statistics as KPI blocks.
+
+Chart:
+If chart data exists, render the supplied data visually using HTML/CSS.
+
+Timeline:
+Render all meaningful supplied timeline stages.
+
+Points:
+Render supplied points and explanations clearly.
+
+Selected image:
+If selected_url exists, use that exact URL.
+If it does not exist, do not invent an image URL.
+
+BODY LIMIT
+
+Keep normal body text concise.
+Aim for approximately 60-80 words maximum.
+
+ONE FOCAL POINT
+
+Every slide should have one obvious visual focal point.
+
+Return only JSON.
+No markdown.
+No explanation.
 """
 
-SIMPLE_SLIDE_HTML_SYSTEM = f"""Return ONLY valid compact JSON (no markdown):
+
+SIMPLE_SLIDE_HTML_SYSTEM = f"""
+You are a professional presentation designer.
+
+Return ONLY valid compact JSON:
 
 {{
   "label": "short label",
-  "notes": "notes",
+  "notes": "speaker notes",
   "html": "<div style=\\"...\\">...</div>"
 }}
 
-Hard limits:
-- Root: width:{SLIDE_WIDTH}px;height:{SLIDE_HEIGHT}px;box-sizing:border-box;overflow:hidden;padding:56px;position:relative
+Root:
+
+width:{SLIDE_WIDTH}px;height:{SLIDE_HEIGHT}px;box-sizing:border-box;overflow:hidden;padding:56px;position:relative
+
+Rules:
+- inline CSS only
 - HTML under 1800 characters
-- Always wrap text inside high-contrast solid/semi-opaque cards to prevent readability conflicts with images
-- Title + short body or 2–3 cards only
-- Use palette colors from user message
-- Inline CSS only
-- If title slide: title + slogan + presenter
-- If closing: thank the audience
+- preserve supplied content
+- use only the selected palette
+- do not invent information
+- use strong visual hierarchy
+- use designed backgrounds instead of flat backgrounds
+- use subtle gradients, patterns, geometric shapes or layered surfaces
+- use high-contrast containers when imagery is present
+- title slide: title + subtitle + presenters
+- closing slide: conclusion + thank-you
 """
 
-REGEN_SYSTEM = f"""You are a presentation designer.
-Given slide HTML and an instruction, return ONLY valid JSON:
+
+REGEN_SYSTEM = f"""
+You are a presentation designer.
+
+Regenerate the supplied slide according to the user's instruction.
+
+Return ONLY valid JSON:
 
 {{
   "label": "short label",
@@ -510,7 +680,32 @@ Given slide HTML and an instruction, return ONLY valid JSON:
   "html": "<div style=\\"width:{SLIDE_WIDTH}px;height:{SLIDE_HEIGHT}px;...\\">...</div>"
 }}
 
-Keep meaning unless instruction changes it. Ensure text readability using semi-transparent overlay masks or contrast container cards if image backgrounds are involved.
-All CSS inline. Root exactly {SLIDE_WIDTH}x{SLIDE_HEIGHT}.
-HTML under 2800 characters. Simple CSS only.
+Rules:
+- preserve meaning unless the instruction explicitly changes it
+- preserve supplied factual information
+- never invent statistics
+- never invent sources
+- use the supplied palette when available
+- do not introduce unrelated colors
+- keep the selected visual identity
+- improve hierarchy, spacing and composition
+- use designed backgrounds
+- use gradients, patterns, geometric shapes or layered surfaces when appropriate
+- use readable overlays for image backgrounds
+- all CSS inline
+- root exactly {SLIDE_WIDTH}x{SLIDE_HEIGHT}
+- HTML under 2800 characters
+- no markdown
+- no explanation
 """
+
+
+def get_role_rule(layout_hint: str) -> str:
+    raw = (layout_hint or "").strip().lower()
+    normalized = raw.replace("_", "-").replace(" ", "-")
+    aliases = {
+        "definition+pillars": "two-column",
+        "impact-list": "numbered-takeaways",
+    }
+    key = aliases.get(normalized, normalized)
+    return ROLE_RULES.get(key, ROLE_RULES["content"])

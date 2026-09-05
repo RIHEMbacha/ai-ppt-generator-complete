@@ -1,7 +1,7 @@
 
 export interface ContentPoint {
   point: string;
-  explanation: string;
+  explanation?: string;
 }
 
 export interface Stat {
@@ -67,12 +67,24 @@ export interface Slide {
   html: string;
 }
 
+export interface Palette {
+  name: string;
+  bg: string;
+  surface: string;
+  primary: string;
+  accent: string;
+  text: string;
+  muted: string;
+}
+
 export interface OutlineResponse {
   title: string;
   subtitle: string;
   presenters: string[];
   date: string | null;
+  palettes: Palette[];
   palette: Record<string, string>;
+  selected_palette_index?: number;
   slides: SlideContent[];
 }
 
@@ -92,6 +104,8 @@ export interface GenerateOutlineRequest {
 export interface ConfirmOutlineRequest {
   title: string;
   subtitle: string;
+  presenters: string[];
+  date: string | null;
   tone: string;
   palette: Record<string, string>;
   slides: SlideContent[];

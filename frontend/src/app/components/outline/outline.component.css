@@ -400,6 +400,18 @@
   gap: 7px;
 }
 
+.palette-controls {
+  min-width: 240px;
+}
+
+:host ::ng-deep .palette-select {
+  width: 100%;
+}
+
+:host ::ng-deep .palette-select .p-select-label {
+  font-size: 13px;
+}
+
 .swatch {
   width: 30px;
   height: 30px;
@@ -1644,6 +1656,10 @@
     align-items: flex-start;
 
     flex-direction: column;
+  }
+
+  .palette-controls {
+    width: 100%;
   }
 
   .slides-heading {

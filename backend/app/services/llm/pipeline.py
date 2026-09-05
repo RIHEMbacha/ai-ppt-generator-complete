@@ -1,39 +1,32 @@
-"""Two-phase presentation pipeline: outline → per-slide HTML."""
 
 import asyncio
 import json
 import logging
-import base64
-import re
-from typing import List, Optional
-import asyncio
-import json
-import logging
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
-from .prompts import (
-    SINGLE_SLIDE_HTML_SYSTEM,
-    SIMPLE_SLIDE_HTML_SYSTEM,
-    tone_block,
+from app.models import (
+    OutlineResponse,
+    Presentation,
+    Slide,
+    SlideContent,
+    ImageSelection,
+    ImageCandidate,
 )
 from .constants import SLIDE_WIDTH, SLIDE_HEIGHT
-
-
-from app.models import OutlineResponse, Presentation, Slide, SlideContent,ImageSelection ,ImageCandidate
-
-from .constants import SLIDE_HEIGHT, SLIDE_WIDTH
 from .html_utils import fallback_html, normalize_slide_html, truncate
-from .json_utils import extract_json
 from .photos import inject_background, resolve_slide_background,rank_images,search_pexels_candidates
 from .prompts import (
+    OUTLINE_DOCUMENT_SYSTEM,
     OUTLINE_SYSTEM,
+    PALETTE_RULES,
     REGEN_SYSTEM,
-    SIMPLE_SLIDE_HTML_SYSTEM,
     SINGLE_SLIDE_HTML_SYSTEM,
+    get_role_rule,
     resolve_tone,
     tone_block,
 )
-from .providers import call_llm, call_llm_with_meta
+from .providers import call_llm
+
 
 logger = logging.getLogger("llm")
 
@@ -48,6 +41,7 @@ async def generate_outline(
 
     user = (
         f"{tone_block(tone)}\n\n"
+        f"{PALETTE_RULES}\n"
         f"Tone requested: {tone}\n"
         f"Resolved tone: {tone_key}\n"
         f"Target number of slides: {num_slides}\n\n"
@@ -58,14 +52,13 @@ async def generate_outline(
         f"{truncate(content)}\n"
     )
 
-    raw = await asyncio.to_thread(
+    data = await asyncio.to_thread(
         call_llm,
         OUTLINE_SYSTEM,
         user,
         8192
     )
 
-    data = extract_json(raw)
 
     outline = OutlineResponse.model_validate(data)
 
@@ -73,7 +66,6 @@ async def generate_outline(
 
         query = (slide.image_query or "").strip()
 
-        # This slide doesn't need an image
         if not query:
             continue
 
@@ -101,24 +93,23 @@ async def generate_outline(
                         file_size=image.get("file_size", 0),
                         photographer=image.get(
                             "photographer",
-                            ""
+                            "",
                         ),
                         score=image.get(
                             "score",
-                            0
-                        )
+                            0,
+                        ),
                     )
                     for image in candidates
                 ],
-                selected_url=None
+                selected_url=None,
             )
 
-        except Exception as e:
-
+        except Exception as exc:
             logger.warning(
                 "Image search failed for slide '%s': %s",
                 slide.label,
-                e
+                exc,
             )
 
             slide.image_selection = ImageSelection(
@@ -127,7 +118,105 @@ async def generate_outline(
                 selected_url=None
             )
 
-    # Return the AI outline + photo candidates
+    return outline
+
+
+
+
+async def generate_outline_from_document(
+        content: str,
+        num_slides: int,
+        tone: str,
+        document_images: Optional[List[str]] = None,
+) -> OutlineResponse:
+
+    tone_key = resolve_tone(tone)
+    doc_images = document_images or []
+
+    user = (
+        f"{tone_block(tone)}\n"
+        f"{PALETTE_RULES}\n"
+        f"Requested tone: {tone}\n"
+        f"Resolved tone: {tone_key}\n"
+        f"Target number of slides: {num_slides}\n"
+        f"Document image count: {len(doc_images)}\n\n"
+        "Create the presentation outline from the uploaded document.\n"
+        "Generate exactly 5 palette options.\n"
+        "The first slide must be title.\n"
+        "The second slide must be agenda.\n"
+        "The final slide must be closing.\n"
+        "Reuse document images strategically when appropriate.\n"
+        "Do not force images onto chart-heavy or dense data slides.\n\n"
+        "SOURCE CONTENT:\n"
+        f"{truncate(content)}\n"
+    )
+
+
+    data = await asyncio.to_thread(
+        call_llm,
+        OUTLINE_DOCUMENT_SYSTEM,
+        user,
+        8192
+    )
+
+    outline = OutlineResponse.model_validate(data)
+
+    for slide in outline.slides:
+
+        query = (slide.image_query or "").strip()
+
+        if not query:
+            continue
+
+        try:
+            candidates = await asyncio.to_thread(
+                search_pexels_candidates,
+                query,
+                "landscape",
+                5
+            )
+
+            candidates = rank_images(
+                candidates,
+                "landscape"
+            )
+
+            slide.image_selection = ImageSelection(
+                query=query,
+                candidates=[
+                    ImageCandidate(
+                        url=image["url"],
+                        thumbnail_url=image.get("thumbnail_url"),
+                        width=image.get("width", 0),
+                        height=image.get("height", 0),
+                        file_size=image.get("file_size", 0),
+                        photographer=image.get(
+                            "photographer",
+                            "",
+                        ),
+                        score=image.get(
+                            "score",
+                            0,
+                        ),
+                    )
+                    for image in candidates
+                ],
+                selected_url=None,
+            )
+
+        except Exception as exc:
+            logger.warning(
+                "Image search failed for slide '%s': %s",
+                slide.label,
+                exc,
+            )
+
+            slide.image_selection = ImageSelection(
+                query=query,
+                candidates=[],
+                selected_url=None
+            )
+
     return outline
 
 async def generate_single_slide_html(
@@ -142,7 +231,6 @@ async def generate_single_slide_html(
         total_slides: int,
 ) -> Dict[str, Any]:
 
-    # Convert Pydantic model to dictionary safely.
     if hasattr(slide, "model_dump"):
         slide_data = slide.model_dump()
     elif hasattr(slide, "dict"):
@@ -151,6 +239,13 @@ async def generate_single_slide_html(
         slide_data = slide
     else:
         slide_data = {}
+
+    layout_hint = (
+        (slide_data.get("layout_hint") or "content")
+        .strip()
+        .lower()
+    )
+    role_rule = get_role_rule(layout_hint)
 
     # Selected image from the review screen.
     image_selection = slide_data.get("image_selection") or {}
@@ -163,8 +258,6 @@ async def generate_single_slide_html(
         "selected_url": selected_image,
     }
 
-    # Remove candidates from the prompt.
-    # The LLM only needs the selected image URL.
     slide_for_prompt = {
         "label": slide_data.get("label", "Slide"),
         "objective": slide_data.get("objective", ""),
@@ -173,12 +266,11 @@ async def generate_single_slide_html(
         "stats": slide_data.get("stats", []),
         "chart": slide_data.get("chart"),
         "timeline": slide_data.get("timeline", []),
-        "layout_hint": slide_data.get("layout_hint", "content"),
+        "layout_hint": layout_hint,
         "image_query": slide_data.get("image_query", ""),
         "image_selection": image_info,
     }
 
-    # Full presentation context.
     presentation_context = {
         "title": title,
         "subtitle": subtitle,
@@ -197,96 +289,19 @@ PRESENTATION INFORMATION
 CURRENT SLIDE CONTENT
 {json.dumps(slide_for_prompt, ensure_ascii=False, indent=2)}
 
-==================================================
-IMPORTANT
-==================================================
 
 The slide above was explicitly reviewed and edited by the user.
 
 You MUST preserve the user's content.
+ Tone rule : f"{tone_block(tone)}\n"
+slide role rule: {role_rule}
 
-Do NOT:
-- invent statistics
-- invent chart values
-- invent timeline events
-- remove meaningful user content
-- replace the user's wording unnecessarily
-- create information that is not present
-- add fake sources
+Use only the selected palette from PRESENTATION.
 
-You MAY:
-- improve visual hierarchy
-- shorten text slightly when necessary for layout
-- arrange content professionally
-- choose appropriate cards, spacing and typography
-- use the selected image if one exists
+Do not create another palette.
+Do not introduce unrelated colors.
 
-==================================================
-SPECIAL CONTENT
-==================================================
-
-If "stats" contains items:
-render them as KPI/statistic cards.
-
-If "chart" exists and contains data:
-render the chart visually using HTML/CSS.
-Do NOT invent data.
-
-If "timeline" contains items:
-render the timeline with all meaningful steps.
-
-If "points" contains items:
-render the points and their explanations clearly.
-
-If "selected_url" exists:
-use that exact image URL.
-
-If no selected image exists:
-do not invent an image URL.
-
-==================================================
-SLIDE ROLE
-==================================================
-
-The layout hint is:
-
-{slide_data.get("layout_hint", "content")}
-
-Respect this layout role.
-
-For a title slide:
-- presentation title
-- subtitle
-- presenters
-- date
-
-For an agenda:
-- clear numbered agenda items
-
-For big-stats:
-- emphasize the statistics
-
-For chart-focus:
-- emphasize the chart
-
-For timeline:
-- emphasize the timeline
-
-For closing:
-- strong conclusion / thank-you
-
-For normal content:
-- emphasize the objective and content points.
-
-==================================================
-TONE
-==================================================
-
-{tone_block(tone)}
-
-==================================================
 OUTPUT
-==================================================
 
 Return ONLY valid JSON:
 
@@ -299,15 +314,12 @@ Return ONLY valid JSON:
 No markdown.
 No explanation.
 """
-
     # Use your existing LLM provider here.
-    result =  call_llm(
+    parsed =  call_llm(
         system=SINGLE_SLIDE_HTML_SYSTEM,
         user=prompt,
         max_tokens=5000,
     )
-
-    parsed = extract_json(result)
 
     return {
         "label": parsed.get(
@@ -327,7 +339,6 @@ No explanation.
     }
 
 
-
 async def generate_html_from_outline(
         title: str,
         subtitle: str,
@@ -337,26 +348,8 @@ async def generate_html_from_outline(
         presenters: List[str] | None = None,
         date: str | None = None,
 ):
-    """
-    Generate HTML for every confirmed slide.
-
-    The frontend sends the complete edited outline:
-    - title
-    - subtitle
-    - presenters
-    - date
-    - objective
-    - points
-    - stats
-    - chart
-    - timeline
-    - selected image
-    - layout
-    """
-
     presenters = presenters or []
 
-    # Generate each slide independently.
     tasks = [
         generate_single_slide_html(
             title=title,
@@ -372,7 +365,9 @@ async def generate_html_from_outline(
         for index, slide in enumerate(slides)
     ]
 
-    generated_slides = await asyncio.gather(*tasks)
+    generated_slides = await asyncio.gather(
+        *tasks
+    )
 
     return {
         "title": title or "Presentation",
@@ -388,6 +383,7 @@ async def regenerate_slide(
     tone: str,
     palette: Optional[dict] = None,
 ) -> Slide:
+
     html_in = (
         current_html if len(current_html) < 8000 else current_html[:8000] + "<!--truncated-->"
     )
@@ -399,8 +395,7 @@ async def regenerate_slide(
         f"Instruction: {instruction}\n\n"
         f"Current slide HTML:\n{html_in}\n"
     )
-    raw = await asyncio.to_thread(call_llm, REGEN_SYSTEM, user, 8192)
-    data = extract_json(raw)
+    data = await asyncio.to_thread(call_llm, REGEN_SYSTEM, user, 8192)
     html = normalize_slide_html(data.get("html") or current_html)
     return Slide(
         html=html,

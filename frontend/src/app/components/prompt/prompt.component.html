@@ -30,23 +30,105 @@
                         </label>
 
                         <span class="field-hint">
-              Describe your topic, audience and what you want to cover.
+                @if (documentMode) {
+                    Upload a document and SlideForge AI will generate your presentation.
+                } @else {
+                    Describe your topic, audience and what you want to cover.
+                }
             </span>
                     </div>
 
-                    <button type="button" class="ai-badge">
-                        <i class="pi pi-file"></i> Generate from document
+                    <button
+                            type="button"
+                            class="ai-badge"
+                            (click)="toggleDocumentMode()"
+                            [disabled]="loading"
+                    >
+                        <i class="pi pi-file"></i>
+
+                        @if (documentMode) {
+                            Write a brief
+                        } @else {
+                            Generate from document
+                        }
                     </button>
                 </div>
 
-                <textarea
-                        pTextarea
-                        [autoResize]="true"
-                        class="prompt-textarea"
-                        [(ngModel)]="prompt"
-                        rows="5"
-                        placeholder="Example: Create a professional presentation about the future of sports technology, covering market size, fan engagement, athlete analytics, and media rights..."
-                ></textarea>
+                <input
+                    #documentInput
+                    type="file"
+                    accept=".pdf,.doc,.docx,.txt,.md,text/plain,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    class="hidden-document-input"
+                    (change)="onDocumentSelected($event)"
+                />
+
+                @if (documentMode) {
+
+                    <div
+                            class="document-drop-zone"
+                            [class.has-file]="selectedDocumentName"
+                            (click)="openDocumentPicker()"
+                            (dragover)="$event.preventDefault()"
+                            (drop)="onDocumentDrop($event)"
+                    >
+
+                        @if (selectedDocumentName) {
+
+                            <div class="selected-file">
+                                <div class="file-icon">
+                                    <i class="pi pi-file"></i>
+                                </div>
+
+                                <div class="file-info">
+                                    <strong>{{ selectedDocumentName }}</strong>
+                                    <span>Document selected</span>
+                                </div>
+
+                                <button
+                                        type="button"
+                                        class="remove-file"
+                                        (click)="removeDocument($event)"
+                                >
+                                    <i class="pi pi-times"></i>
+                                </button>
+                            </div>
+
+                        } @else {
+
+                            <div class="drop-content">
+
+                                <div class="upload-icon">
+                                    <i class="pi pi-cloud-upload"></i>
+                                </div>
+
+                                <h3>Drop your document here</h3>
+
+                                <p>
+                                    or <span>browse your files</span>
+                                </p>
+
+                                <small>
+                                    PDF, DOC, DOCX, TXT or MD
+                                </small>
+
+                            </div>
+
+                        }
+
+                    </div>
+
+                } @else {
+
+                    <textarea
+                            pTextarea
+                            [autoResize]="true"
+                            class="prompt-textarea"
+                            [(ngModel)]="prompt"
+                            rows="5"
+                            placeholder="Example: Create a professional presentation about the future of sports technology, covering market size, fan engagement, athlete analytics, and media rights..."
+                    ></textarea>
+
+                }
 
             </div>
             <div class="options-grid">

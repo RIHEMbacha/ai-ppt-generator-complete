@@ -1,4 +1,4 @@
-"""Export Presentation → PPTX or simple HTML."""
+"""Export Presentation → PPTX, PDF or simple HTML."""
 
 import io
 import re
@@ -11,6 +11,8 @@ async def export_presentation(pres: Presentation, fmt: str = "pptx") -> bytes:
     fmt = (fmt or "pptx").lower()
     if fmt == "html":
         return _export_html(pres)
+    if fmt == "pdf":
+        return _export_pdf(pres)
     return _export_pptx(pres)
 
 
@@ -39,6 +41,51 @@ def _export_html(pres: Presentation) -> bytes:
     return doc.encode("utf-8")
 
 
+def _export_pdf(pres: Presentation) -> bytes:
+   try:
+       from reportlab.lib.pagesizes import landscape, letter
+       from reportlab.lib.styles import getSampleStyleSheet
+       from reportlab.lib.units import inch
+       from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
+   except ImportError as exc:
+       raise RuntimeError("reportlab is required for PDF export. pip install reportlab") from exc
+
+   buffer = io.BytesIO()
+   doc = SimpleDocTemplate(
+       buffer,
+       pagesize=landscape(letter),
+       rightMargin=0.5 * inch,
+       leftMargin=0.5 * inch,
+       topMargin=0.4 * inch,
+       bottomMargin=0.4 * inch,
+   )
+   styles = getSampleStyleSheet()
+   story = []
+
+   title_style = styles["Title"]
+   title_style.fontName = "Helvetica-Bold"
+   title_style.fontSize = 20
+   story.append(Paragraph(_esc(pres.title or "Presentation"), title_style))
+
+   if pres.subtitle:
+       subtitle_style = styles["Heading2"]
+       subtitle_style.fontName = "Helvetica"
+       subtitle_style.fontSize = 11
+       story.append(Paragraph(_esc(pres.subtitle), subtitle_style))
+
+   story.append(Spacer(1, 0.2 * inch))
+
+   for index, slide in enumerate(pres.slides, start=1):
+       story.append(Paragraph(f"Slide {index}: {_esc(slide.label or 'Untitled')}", styles["Heading1"]))
+       content = (slide.content or slide.notes or "").strip()
+       if content:
+           story.append(Paragraph(_esc(content[:3000]), styles["BodyText"]))
+       story.append(Spacer(1, 0.15 * inch))
+
+   doc.build(story)
+   return buffer.getvalue()
+
+
 def _export_pptx(pres: Presentation) -> bytes:
     """
     Lightweight PPTX export.
@@ -50,7 +97,7 @@ def _export_pptx(pres: Presentation) -> bytes:
     try:
         from pptx import Presentation as PptxPresentation
         from pptx.util import Inches, Pt, Emu
-        from pptx.dml.color import RgbColor
+        from pptx.dml.color import RGBColor
         from pptx.enum.text import PP_ALIGN
     except ImportError:
         raise RuntimeError("python-pptx is required for PPTX export. pip install python-pptx")
@@ -76,7 +123,7 @@ def _export_pptx(pres: Presentation) -> bytes:
         p.text = s.label or "Slide"
         p.font.size = Pt(32)
         p.font.bold = True
-        p.font.color.rgb = RgbColor(0x0F, 0x17, 0x2A)
+        p.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A)
 
         # Body from content or notes
         body_text = (s.content or s.notes or "").strip()
@@ -87,7 +134,7 @@ def _export_pptx(pres: Presentation) -> bytes:
             bp = btf.paragraphs[0]
             bp.text = body_text[:2000]
             bp.font.size = Pt(16)
-            bp.font.color.rgb = RgbColor(0x33, 0x33, 0x33)
+            bp.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
 
         # Speaker notes
         if s.notes:

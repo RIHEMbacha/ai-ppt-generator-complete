@@ -24,9 +24,10 @@ from app.models import (
     Presentation,
     Slide,
 )
-from app.services.parser import extract_text
+from app.services.parser import extract_document_assets
 from app.services.llm import (
     generate_outline,
+    generate_outline_from_document,
     generate_html_from_outline,
     regenerate_slide,
 )
@@ -91,20 +92,24 @@ async def api_outline_from_document(
     """Same as /api/outline but from an uploaded document."""
     try:
         data = await file.read()
-        text = extract_text(file.filename or "file.txt", data)
+        text, document_images = extract_document_assets(
+            file_bytes=data,
+            filename=file.filename or "file.txt",
+        )
         if not text.strip():
             raise HTTPException(status_code=400, detail="No extractable text found")
-        return await generate_outline(text, num_slides, tone)
+        return await generate_outline_from_document(
+            content=text,
+            num_slides=num_slides,
+            tone=tone,
+            document_images=document_images,
+        )
     except HTTPException:
         raise
     except Exception as e:
         logger.exception("Document outline failed")
         raise HTTPException(status_code=500, detail=str(e))
 
-
-# ────────────────────────────────────────────────
-# Phase 2 – Generate HTML (one prompt per slide)
-# ────────────────────────────────────────────────
 
 @app.post("/api/generate-html", response_model=Presentation)
 async def api_generate_html(req: ConfirmOutlineRequest):
@@ -141,9 +146,6 @@ async def api_generate_html(req: ConfirmOutlineRequest):
             detail=str(e),
         )
 
-# ────────────────────────────────────────────────
-# Single-slide regeneration
-# ────────────────────────────────────────────────
 
 @app.post("/api/regenerate-slide", response_model=Slide)
 async def api_regenerate_slide(req: RegenerateSlideRequest):
@@ -160,11 +162,6 @@ async def api_regenerate_slide(req: RegenerateSlideRequest):
         logger.exception("Regenerate failed")
         raise HTTPException(status_code=500, detail=str(e))
 
-
-# ────────────────────────────────────────────────
-# Export
-# ────────────────────────────────────────────────
-
 @app.post("/api/export")
 async def api_export(req: ExportRequest):
     try:
@@ -174,6 +171,9 @@ async def api_export(req: ExportRequest):
         if fmt == "html":
             media = "text/html"
             filename = f"{safe}.html"
+        elif fmt == "pdf":
+            media = "application/pdf"
+            filename = f"{safe}.pdf"
         else:
             media = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
             filename = f"{safe}.pptx"

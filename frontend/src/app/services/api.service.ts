@@ -28,6 +28,14 @@ export class ApiService {
     return this.http.post<OutlineResponse>(`${this.base}/api/outline`, req);
   }
 
+  generateOutlineFromDocument(file: File, numSlides: number, tone: string): Observable<OutlineResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('num_slides', String(numSlides));
+    formData.append('tone', tone);
+    return this.http.post<OutlineResponse>(`${this.base}/api/outline/document`, formData);
+  }
+
   /** Phase 2 – HTML for every slide (independent prompts) */
   generateHtml(req: ConfirmOutlineRequest): Observable<Presentation> {
     return this.http.post<Presentation>(`${this.base}/api/generate-html`, req);
@@ -37,7 +45,7 @@ export class ApiService {
     return this.http.post<Slide>(`${this.base}/api/regenerate-slide`, req);
   }
 
-  export(presentation: Presentation, format: 'pptx' | 'html' = 'pptx'): Observable<Blob> {
+  export(presentation: Presentation, format: 'pptx' | 'pdf' | 'html' = 'pptx'): Observable<Blob> {
     return this.http.post(
       `${this.base}/api/export`,
       { presentation, format },
