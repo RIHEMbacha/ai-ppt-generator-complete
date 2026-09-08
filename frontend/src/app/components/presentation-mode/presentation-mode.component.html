@@ -1,22 +1,21 @@
 @if (presentation && currentSlide) {
-
-    <div class="presentation-page">
+    <div class="presentation-page" (click)="hideControls()">
 
         <div
                 class="slide-container"
-                [innerHTML]="safeHtml(currentSlide.html)"
-        ></div>
+                [innerHTML]="safeHtml(currentSlide.html)">
+        </div>
 
         <div
                 class="presentation-controls"
                 [class.hidden]="!showControls"
+                (click)="$event.stopPropagation()"
         >
-
             <button
-                    type="button"
                     class="control-button"
-                    [disabled]="currentIndex === 0"
                     (click)="previous()"
+                    [disabled]="currentIndex === 0"
+                    title="Previous slide"
             >
                 <i class="pi pi-chevron-left"></i>
             </button>
@@ -28,10 +27,10 @@
             </div>
 
             <button
-                    type="button"
                     class="control-button"
-                    [disabled]="currentIndex >= presentation.slides.length - 1"
                     (click)="next()"
+                    [disabled]="currentIndex === presentation.slides.length - 1"
+                    title="Next slide"
             >
                 <i class="pi pi-chevron-right"></i>
             </button>
@@ -39,25 +38,20 @@
             <div class="control-separator"></div>
 
             <button
-                    type="button"
                     class="control-button"
                     (click)="openPresenterNotes()"
                     title="Presenter notes"
             >
-                <i class="pi pi-microphone"></i>
+                <i class="pi pi-file-edit"></i>
             </button>
 
             <button
-                    type="button"
                     class="control-button"
                     (click)="exitPresentation()"
                     title="Exit presentation"
             >
                 <i class="pi pi-times"></i>
             </button>
-
         </div>
-
     </div>
-
 }

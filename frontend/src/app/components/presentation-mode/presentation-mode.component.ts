@@ -26,6 +26,7 @@ export class PresentationModeComponent implements OnInit, OnDestroy {
   private controlsTimer: ReturnType<typeof setTimeout> | null = null;
 
   showControls = false;
+   error: string='';
 
   get presentation() {
     return this.state.presentation();
@@ -53,9 +54,6 @@ export class PresentationModeComponent implements OnInit, OnDestroy {
 
     document.body.classList.add('presentation-active');
 
-    setTimeout(() => {
-      this.requestFullscreen();
-    });
   }
 
   ngOnDestroy() {
@@ -67,9 +65,6 @@ export class PresentationModeComponent implements OnInit, OnDestroy {
 
     this.closeNotesWindow();
 
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
-    }
   }
 
   safeHtml(html: string): SafeHtml {
@@ -100,35 +95,38 @@ export class PresentationModeComponent implements OnInit, OnDestroy {
   this.state.goTo(3)
   }
 
-  openPresenterNotes() {
-    if (this.notesWindow && !this.notesWindow.closed) {
-      this.notesWindow.focus();
+  async openPresenterNotes() {
+    const documentPiP = (window as any).documentPictureInPicture;
+
+    if (!documentPiP) {
+      this.error = 'Document Picture-in-Picture is not supported in this browser.';
       return;
     }
 
-    const width = 500;
-    const height = 700;
-
-    this.notesWindow = window.open(
-        '',
-        'presentation-presenter-notes',
-        `width=${width},height=${height}`
-    );
-
-    if (!this.notesWindow) {
+    if (documentPiP.window) {
+      documentPiP.window.focus();
       return;
     }
 
-    this.renderNotesWindow();
+    try {
+      const pipWindow = await documentPiP.requestWindow({
+        width: 460,
+        height: 650,
+      });
 
-    this.notesWindow.onbeforeunload = () => {
-      this.notesWindow = null;
-    };
+      this.notesWindow = pipWindow;
 
-    this.showControlsTemporarily();
+      this.renderNotesWindow();
+
+      pipWindow.addEventListener('pagehide', () => {
+        this.notesWindow = null;
+      });
+    } catch (error) {
+      console.error('Failed to open presenter notes:', error);
+    }
   }
 
-  private renderNotesWindow() {
+  renderNotesWindow() {
     if (!this.notesWindow) return;
 
     const slide = this.currentSlide;
@@ -138,109 +136,131 @@ export class PresentationModeComponent implements OnInit, OnDestroy {
 
     const nextSlide = p.slides[this.currentIndex + 1];
 
-    this.notesWindow.document.open();
+    const doc = this.notesWindow.document;
 
-    this.notesWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
+    doc.head.innerHTML = `
         <title>Presenter Notes</title>
 
         <style>
-          * {
-            box-sizing: border-box;
-          }
+            * {
+                box-sizing: border-box;
+            }
 
-          body {
-            margin: 0;
-            padding: 28px;
-            background: #0f172a;
-            color: #f8fafc;
-            font-family:
-              Inter,
-              system-ui,
-              -apple-system,
-              BlinkMacSystemFont,
-              "Segoe UI",
-              sans-serif;
-          }
+            html,
+            body {
+                margin: 0;
+                width: 100%;
+                height: 100%;
+            }
 
-          .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-          }
+            body {
+                padding: 24px;
+                background:
+                    radial-gradient(
+                        circle at top right,
+                        rgba(99, 102, 241, 0.22),
+                        transparent 40%
+                    ),
+                    #0f172a;
+                color: #f8fafc;
+                font-family:
+                    Inter,
+                    system-ui,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    sans-serif;
+                overflow: auto;
+            }
 
-          .eyebrow {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: #94a3b8;
-          }
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 24px;
+            }
 
-          .counter {
-            font-size: 14px;
-            color: #94a3b8;
-          }
+            .eyebrow {
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 1.5px;
+                color: #94a3b8;
+            }
 
-          .title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 24px;
-          }
+            .counter {
+                font-size: 13px;
+                color: #94a3b8;
+                font-weight: 600;
+            }
 
-          .notes {
-            padding: 22px;
-            border-radius: 18px;
-            background: rgba(255,255,255,.08);
-            border: 1px solid rgba(255,255,255,.12);
-            line-height: 1.7;
-            font-size: 16px;
-          }
+            .title {
+                font-size: 22px;
+                line-height: 1.3;
+                font-weight: 700;
+                margin-bottom: 20px;
+            }
 
-          .next {
-            margin-top: 24px;
-            padding: 18px;
-            border-radius: 16px;
-            background: rgba(255,255,255,.05);
-          }
+            .notes {
+                padding: 20px;
+                border-radius: 18px;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                line-height: 1.7;
+                font-size: 15px;
+                color: #e2e8f0;
+            }
 
-          .next-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #94a3b8;
-            margin-bottom: 8px;
-          }
+            .next {
+                margin-top: 20px;
+                padding: 18px;
+                border-radius: 16px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
 
-          .next-title {
-            font-size: 16px;
-            font-weight: 600;
-          }
+            .next-label {
+                font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: #94a3b8;
+                margin-bottom: 8px;
+                font-weight: 700;
+            }
+
+            .next-title {
+                font-size: 15px;
+                font-weight: 600;
+                color: #f8fafc;
+            }
+
+            .progress {
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                height: 3px;
+                background: #6366f1;
+                width: ${((this.currentIndex + 1) / p.slides.length) * 100}%;
+            }
         </style>
-      </head>
+    `;
 
-      <body>
-
+    doc.body.innerHTML = `
         <div class="header">
-          <div class="eyebrow">
-            PRESENTER
-          </div>
+            <div class="eyebrow">PRESENTER</div>
 
-          <div class="counter">
-            ${this.currentIndex + 1} / ${p.slides.length}
-          </div>
+            <div class="counter">
+                ${this.currentIndex + 1} / ${p.slides.length}
+            </div>
         </div>
 
         <div class="title">
-          ${this.escapeHtml(
+            ${this.escapeHtml(
         slide.label || `Slide ${this.currentIndex + 1}`
     )}
         </div>
 
         <div class="notes">
-          ${this.escapeHtml(
+            ${this.escapeHtml(
         slide.notes || 'No presenter notes for this slide.'
     )}
         </div>
@@ -248,24 +268,24 @@ export class PresentationModeComponent implements OnInit, OnDestroy {
         ${
         nextSlide
             ? `
-              <div class="next">
-                <div class="next-label">
-                  Next slide
-                </div>
+                    <div class="next">
+                        <div class="next-label">
+                            Next slide
+                        </div>
 
-                <div class="next-title">
-                  ${this.escapeHtml(nextSlide.label || '')}
-                </div>
-              </div>
-            `
+                        <div class="next-title">
+                            ${this.escapeHtml(
+                nextSlide.label ||
+                `Slide ${this.currentIndex + 2}`
+            )}
+                        </div>
+                    </div>
+                `
             : ''
     }
 
-      </body>
-      </html>
-    `);
-
-    this.notesWindow.document.close();
+        <div class="progress"></div>
+    `;
   }
 
   private syncNotesWindow() {
@@ -288,11 +308,6 @@ export class PresentationModeComponent implements OnInit, OnDestroy {
     this.notesWindow = null;
   }
 
-  private requestFullscreen() {
-    document.documentElement
-        .requestFullscreen?.()
-        .catch(() => {});
-  }
 
   private showControlsTemporarily() {
     this.showControls = true;
@@ -306,7 +321,7 @@ export class PresentationModeComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  private hideControls() {
+   hideControls() {
     if (this.controlsTimer) {
       clearTimeout(this.controlsTimer);
     }

@@ -1,4 +1,3 @@
-"""Azure OpenAI provider (chat completions)."""
 
 import json
 import re
