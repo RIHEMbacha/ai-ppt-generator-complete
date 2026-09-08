@@ -1,0 +1,63 @@
+@if (presentation && currentSlide) {
+
+    <div class="presentation-page">
+
+        <div
+                class="slide-container"
+                [innerHTML]="safeHtml(currentSlide.html)"
+        ></div>
+
+        <div
+                class="presentation-controls"
+                [class.hidden]="!showControls"
+        >
+
+            <button
+                    type="button"
+                    class="control-button"
+                    [disabled]="currentIndex === 0"
+                    (click)="previous()"
+            >
+                <i class="pi pi-chevron-left"></i>
+            </button>
+
+            <div class="slide-counter">
+                {{ currentIndex + 1 }}
+                <span>/</span>
+                {{ presentation.slides.length }}
+            </div>
+
+            <button
+                    type="button"
+                    class="control-button"
+                    [disabled]="currentIndex >= presentation.slides.length - 1"
+                    (click)="next()"
+            >
+                <i class="pi pi-chevron-right"></i>
+            </button>
+
+            <div class="control-separator"></div>
+
+            <button
+                    type="button"
+                    class="control-button"
+                    (click)="openPresenterNotes()"
+                    title="Presenter notes"
+            >
+                <i class="pi pi-microphone"></i>
+            </button>
+
+            <button
+                    type="button"
+                    class="control-button"
+                    (click)="exitPresentation()"
+                    title="Exit presentation"
+            >
+                <i class="pi pi-times"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+}

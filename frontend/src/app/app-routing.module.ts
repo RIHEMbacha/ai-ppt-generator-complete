@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PromptComponent } from './components/prompt/prompt.component';
 import { OutlineComponent } from './components/outline/outline.component';
 import { PreviewComponent } from './components/preview/preview.component';
+import {PresentationModeComponent} from "./components/presentation-mode/presentation-mode.component";
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
     path: 'preview',
     component: PreviewComponent,
     title: 'SlideForge AI — Preview',
+  },
+  {
+    path: 'presentation',
+    component: PresentationModeComponent
   },
   {
     path: '**',

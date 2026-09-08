@@ -1,0 +1,158 @@
+:host {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: block;
+
+    width: 100vw;
+    height: 100vh;
+
+    margin: 0;
+    padding: 0;
+}
+
+.presentation-page {
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    margin: 0;
+    padding: 0;
+
+    background: #000;
+
+    overflow: hidden;
+
+    z-index: 99999;
+
+    cursor: default;
+}
+
+.slide-container {
+    position: absolute;
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.slide-container > * {
+    flex-shrink: 0;
+}
+
+.presentation-controls {
+    position: fixed;
+
+    left: 50%;
+    bottom: 28px;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 10px;
+
+    border-radius: 18px;
+
+    background: rgba(15, 23, 42, 0.82);
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+
+    box-shadow:
+            0 20px 60px rgba(0, 0, 0, 0.45);
+
+    opacity: 1;
+
+    transition:
+            opacity 0.3s ease,
+            transform 0.3s ease;
+
+    z-index: 100000;
+}
+
+.presentation-controls.hidden {
+    opacity: 0;
+    pointer-events: none;
+
+    transform:
+            translate(-50%, 15px);
+}
+
+.control-button {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    color: white;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease;
+}
+
+.control-button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.16);
+
+    transform: translateY(-1px);
+}
+
+.control-button:disabled {
+    opacity: 0.3;
+
+    cursor: default;
+}
+
+.slide-counter {
+    min-width: 70px;
+
+    text-align: center;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.slide-counter span {
+    margin: 0 5px;
+
+    opacity: 0.45;
+}
+
+.control-separator {
+    width: 1px;
+    height: 24px;
+
+    margin: 0 4px;
+
+    background: rgba(255, 255, 255, 0.14);
+}

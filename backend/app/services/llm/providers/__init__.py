@@ -37,7 +37,7 @@ def call_llm(system: str, user: str, max_tokens: int = 4000):
                 text = call_huggingface(system, user, max_tokens)
             else:
                 continue
-            logger.info("Provider %s: %s", provider, text)
+            logger.info("Provider %s: %s", provider)
             return extract_json(text)
 
         except Exception as e:

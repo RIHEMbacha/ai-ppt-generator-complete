@@ -88,7 +88,9 @@ export class PreviewComponent implements OnInit, AfterViewChecked {
   back() {
     this.state.goTo(2);
   }
-
+  present() {
+    this.state.goTo(4);
+  }
   updateScale() {
     const frame = this.slideFrame?.nativeElement;
     if (!frame) return;

@@ -10,7 +10,7 @@ export class StateService {
 
   private readonly STORAGE_KEY = 'slideforge_state';
 
-  step = signal<1 | 2 | 3>(1);
+  step = signal<1|2|3|4>(1);
   tone = signal('professional');
   outline = signal<OutlineResponse | null>(null);
   presentation = signal<Presentation | null>(null);
@@ -20,14 +20,15 @@ export class StateService {
     this.restore();
   }
 
-  goTo(step: 1 | 2 | 3) {
+  goTo(step:1|2|3|4) {
     this.step.set(step);
     this.save();
 
-    const routes: Record<1 | 2 | 3, string> = {
+    const routes: Record<1|2|3|4, string> = {
       1: '/prompt',
       2: '/outline',
-      3: '/preview'
+      3: '/preview',
+      4:'/presentation'
     };
 
     void this.router.navigateByUrl(routes[step]);

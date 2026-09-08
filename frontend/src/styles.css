@@ -313,7 +313,35 @@ select {
         transform: translateY(0);
     }
 }
+body.presentation-active .app-header {
+    display: none !important;
+}
 
+body.presentation-active .app-content {
+    position: fixed !important;
+
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    max-width: none !important;
+
+    overflow: hidden !important;
+}
+
+body.presentation-active .app-shell {
+    width: 100vw !important;
+    height: 100vh !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: hidden !important;
+}
 
 /* =========================================================
    RESPONSIVE
