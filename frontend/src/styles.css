@@ -229,7 +229,8 @@ button {
     opacity: 0.55 !important;
 }
 
-
+.p-select-label {
+    font-size: 13px;}
 .p-select-list-container {
     max-height: 120px !important;
     font-size: 12px;

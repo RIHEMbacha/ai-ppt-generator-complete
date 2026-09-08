@@ -452,12 +452,13 @@
                                                 type="text"
                                                 [(ngModel)]="stat.value"
                                                 placeholder="42%"
-                                                class="stat-value"
+                                                class="outline-input"
                                         />
 
                                         <input
                                                 pInputText
                                                 type="text"
+                                                class="outline-input"
                                                 [(ngModel)]="stat.label"
                                                 placeholder="Statistic name"
                                                 (ngModelChange)="saveChanges()"
@@ -466,6 +467,7 @@
                                         <input
                                                 pInputText
                                                 type="text"
+                                                class="outline-input"
                                                 [(ngModel)]="stat.context"
                                                 placeholder="Context / description"
                                                 (ngModelChange)="saveChanges()"
@@ -660,6 +662,7 @@
                                             <input
                                                     pInputText
                                                     type="text"
+                                                    class="outline-input"
                                                     [(ngModel)]="row.label"
                                                     placeholder="Label, e.g. 2024"
                                                     (ngModelChange)="saveChanges()"
@@ -668,6 +671,7 @@
                                             <input
                                                     pInputText
                                                     type="number"
+                                                    class="outline-input"
                                                     [(ngModel)]="row.value"
                                                     placeholder="Value"
                                                     (ngModelChange)="saveChanges()"
