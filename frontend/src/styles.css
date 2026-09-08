@@ -4,32 +4,30 @@
 
 /* PrimeIcons styling */
 .pi {
-  font-size: 13px !important;
-  margin-right: 4px;
+    font-size: 14px !important;
 }
 
 :root {
-  --text: #172033;
-  --text-soft: #4f5d73;
-  --muted: #8994a7;
+    --text: #172033;
+    --text-soft: #4f5d73;
+    --muted: #8994a7;
 
-  --border: #e2e7ef;
+    --border: #e2e7ef;
 
-  --primary: #667eea;
-  --primary-dark: #5869d8;
+    --primary: #667eea;
+    --primary-dark: #5869d8;
 
-  --success: #35c98b;
-  --danger: #e85d68;
+    --success: #35c98b;
+    --danger: #e85d68;
 
-  --radius: 14px;
+    --radius: 14px;
 
-  --font:
-          'Inter',
-          system-ui,
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          sans-serif;
+    --font: 'Inter',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 
@@ -38,32 +36,32 @@
    ========================================================= */
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 
 html,
 body {
-  width: 100%;
-  min-height: 100%;
+    width: 100%;
+    min-height: 100%;
 }
 
 
 body {
-  margin: 0;
+    margin: 0;
 
-  font-family: var(--font);
+    font-family: var(--font);
 
-  color: var(--text);
+    color: var(--text);
 
-  background: #dce6f2;
+    background: #dce6f2;
 
-  line-height: 1.5;
+    line-height: 1.5;
 
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 
@@ -72,10 +70,10 @@ body {
    ========================================================= */
 
 app-root {
-  display: block;
+    display: block;
 
-  width: 100%;
-  min-height: 100vh;
+    width: 100%;
+    min-height: 100vh;
 }
 
 
@@ -87,19 +85,159 @@ button,
 input,
 textarea,
 select {
-  font: inherit;
+    font: inherit;
 }
 
 
 button {
-  border: 0;
+    border: 0;
+}
+
+/* Global PrimeNG button glass effect */
+.p-button {
+    position: relative !important;
+    overflow: hidden !important;
+    height: 42px !important;
+    border-radius: 12px !important;
+    font-size: 12px !important;
+    font-weight: 750 !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    backdrop-filter: blur(18px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+    transition: transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease !important;
+}
+
+.p-button::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 1px !important;
+    border-radius: inherit !important;
+    background: linear-gradient(
+            115deg,
+            rgba(255, 255, 255, 0.38) 0%,
+            rgba(255, 255, 255, 0.16) 18%,
+            rgba(255, 255, 255, 0.03) 42%,
+            transparent 64%,
+            rgba(255, 255, 255, 0.1) 100%
+    ) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+}
+
+.p-button::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 80% !important;
+    height: 65% !important;
+    top: -38% !important;
+    left: 10% !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.18) !important;
+    filter: blur(20px) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+}
+
+.p-button > * {
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.p-button.p-button-secondary {
+    background: rgba(225, 230, 240, 0.58) !important;
+    border-color: rgb(195 200 209 / 0.51) !important;
+    color: #263247 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(150, 160, 180, 0.18),
+    inset 0 0 18px rgba(255, 255, 255, 0.14),
+    0 7px 20px rgba(40, 55, 90, 0.14) !important;
+}
+
+.p-button.p-button-outlined {
+    background: rgba(225, 230, 240, 0.46) !important;
+    border-color: rgb(195 200 209 / 0.51) !important;
+    color: #263247 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 16px rgba(255, 255, 255, 0.14),
+    0 7px 20px rgba(40, 55, 90, 0.12) !important;
+}
+
+.p-button.p-button-text {
+    background: rgba(225, 230, 240, 0.34) !important;
+    border-color: rgb(195 200 209 / 0.51) !important;
+    color: #344054 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84),
+    inset 0 0 15px rgba(255, 255, 255, 0.12),
+    0 6px 18px rgba(40, 55, 90, 0.1) !important;
+}
+
+.p-button.p-button-primary {
+    background: linear-gradient(
+            135deg,
+            rgba(91, 140, 255, 0.9),
+            rgba(128, 108, 242, 0.9)
+    ) !important;
+    border-color: rgba(255, 255, 255, 0.48) !important;
+    color: #fff !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 0 20px rgba(255, 255, 255, 0.1),
+    0 8px 22px rgba(91, 110, 220, 0.28) !important;
+}
+
+.p-button:not(:disabled):hover {
+    transform: translateY(-1px) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 0 22px rgba(255, 255, 255, 0.18),
+    0 11px 28px rgba(40, 55, 90, 0.18) !important;
+}
+
+.p-button.p-button-secondary:not(:disabled):hover {
+    background: rgba(215, 221, 233, 0.72) !important;
+}
+
+.p-button.p-button-outlined:not(:disabled):hover {
+    background: rgba(215, 221, 233, 0.62) !important;
+}
+
+.p-button.p-button-text:not(:disabled):hover {
+    background: rgba(215, 221, 233, 0.5) !important;
+}
+
+.p-button.p-button-primary:not(:disabled):hover {
+    background: linear-gradient(
+            135deg,
+            rgba(91, 140, 255, 0.97),
+            rgba(128, 108, 242, 0.97)
+    ) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 0 22px rgba(255, 255, 255, 0.15),
+    0 12px 30px rgba(91, 110, 220, 0.32) !important;
+}
+
+.p-button:not(:disabled):active {
+    transform: scale(0.98) !important;
+    box-shadow: inset 0 2px 7px rgba(25, 35, 60, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 3px 10px rgba(40, 55, 90, 0.12) !important;
+}
+
+.p-button:disabled {
+    opacity: 0.55 !important;
 }
 
 
+.p-select-list-container {
+    max-height: 120px !important;
+    font-size: 12px;
+}
 input,
 textarea,
 select {
-  outline: none;
+    outline: none;
 }
 
 
@@ -108,8 +246,8 @@ select {
    ========================================================= */
 
 ::selection {
-  background: rgba(102, 126, 234, 0.2);
-  color: #172033;
+    background: rgba(102, 126, 234, 0.2);
+    color: #172033;
 }
 
 
@@ -118,25 +256,25 @@ select {
    ========================================================= */
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+    width: 8px;
+    height: 8px;
 }
 
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
 }
 
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 115, 140, 0.25);
+    background: rgba(100, 115, 140, 0.25);
 
-  border-radius: 999px;
+    border-radius: 999px;
 }
 
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 115, 140, 0.4);
+    background: rgba(100, 115, 140, 0.4);
 }
 
 
@@ -145,17 +283,17 @@ select {
    ========================================================= */
 
 .hidden {
-  display: none !important;
+    display: none !important;
 }
 
 
 .text-muted {
-  color: var(--muted);
+    color: var(--muted);
 }
 
 
 .text-center {
-  text-align: center;
+    text-align: center;
 }
 
 
@@ -164,15 +302,15 @@ select {
    ========================================================= */
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 
@@ -182,8 +320,8 @@ select {
 
 @media (max-width: 700px) {
 
-  body {
-    font-size: 14px;
-  }
+    body {
+        font-size: 14px;
+    }
 
 }

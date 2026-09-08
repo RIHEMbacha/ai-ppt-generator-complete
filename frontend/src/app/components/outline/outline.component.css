@@ -151,9 +151,6 @@
   border: 1px solid #d1d5db;
   display: inline-block;
 }
-/* =========================================================
-   COMMON CARD
-   ========================================================= */
 
 .settings-card,
 .outline-card {
@@ -465,16 +462,53 @@
 }
 
 .slide-count {
+  position: relative;
   padding: 7px 12px;
-
   border-radius: 999px;
 
-  background: #f1f3ff;
-  border: 1px solid  #7180c7;
+  background: rgba(241, 243, 255, 0.72);
+  border: 1px solid rgba(113, 128, 199, 0.65);
   color: #7180c7;
 
   font-size: 11px;
   font-weight: 800;
+
+  overflow: hidden;
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.8),
+          inset 0 0 14px rgba(255, 255, 255, 0.18),
+          0 5px 14px rgba(113, 128, 199, 0.1);
+}
+
+.slide-count::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+          115deg,
+          rgba(255, 255, 255, 0.38) 0%,
+          rgba(255, 255, 255, 0.16) 25%,
+          transparent 65%,
+          rgba(255, 255, 255, 0.1) 100%
+  );
+  pointer-events: none;
+}
+
+.slide-count::after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 80%;
+  top: -45%;
+  left: 15%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  filter: blur(12px);
+  pointer-events: none;
 }
 
 
@@ -491,18 +525,11 @@
 }
 
 
-/* =========================================================
-   OUTLINE CARD
-   ========================================================= */
-
 .outline-card {
   padding: 26px;
 }
 
 
-/* =========================================================
-   SLIDE HEADER
-   ========================================================= */
 
 .outline-card-header {
   display: flex;
@@ -517,9 +544,9 @@
 }
 
 .slide-number {
+  position: relative;
   width: 38px;
   height: 38px;
-
   flex-shrink: 0;
 
   display: grid;
@@ -527,20 +554,59 @@
 
   border-radius: 11px;
 
-  background:
-          linear-gradient(
-                  135deg,
-                  #eef3ff,
-                  #f5efff
-          );
+  background: linear-gradient(
+          135deg,
+          rgba(238, 243, 255, 0.72),
+          rgba(245, 239, 255, 0.72)
+  );
 
-  color:  #7180c7;
-  border: 1px solid  #7180c7;
+  color: #7180c7;
+  border: 1px solid rgba(113, 128, 199, 0.65);
 
   font-size: 13px;
   font-weight: 800;
+
+  overflow: hidden;
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.82),
+          inset 0 0 14px rgba(255, 255, 255, 0.16),
+          0 5px 14px rgba(113, 128, 199, 0.1);
 }
 
+.slide-number::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+          115deg,
+          rgba(255, 255, 255, 0.4) 0%,
+          rgba(255, 255, 255, 0.16) 25%,
+          transparent 65%,
+          rgba(255, 255, 255, 0.1) 100%
+  );
+  pointer-events: none;
+}
+
+.slide-number::after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 75%;
+  top: -42%;
+  left: 15%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+.slide-number {
+  isolation: isolate;
+}
 .slide-header-main {
   flex: 1;
 
@@ -729,44 +795,83 @@
 }
 
 
-/* =========================================================
-   ADD BUTTON
-   ========================================================= */
-
 .add-button {
+  position: relative;
   display: inline-flex;
-
   align-items: center;
   justify-content: center;
-
   gap: 6px;
 
   height: 32px;
-
   padding: 0 11px;
 
-  border: 1px solid #dfe3f2;
-
+  border: 1px solid rgba(201, 196, 236, 0.55);
   border-radius: 9px;
 
-  background:
-          linear-gradient(
-                  135deg,
-                  #f5f6ff,
-                  #fbf7ff
-          );
+  background: linear-gradient(
+          135deg,
+          rgba(245, 246, 255, 0.72),
+          rgba(251, 247, 255, 0.72)
+  );
 
   color: #7069c8;
-
   font-size: 11px;
   font-weight: 800;
 
   cursor: pointer;
+  overflow: hidden;
+
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.85),
+          inset 0 0 14px rgba(255, 255, 255, 0.16),
+          0 5px 14px rgba(100, 100, 180, 0.08);
 
   transition:
-          transform 0.2s,
-          border-color 0.2s,
-          box-shadow 0.2s;
+          transform 0.2s ease,
+          background 0.2s ease,
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+}
+
+.add-button::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+
+  background: linear-gradient(
+          115deg,
+          rgba(255, 255, 255, 0.4) 0%,
+          rgba(255, 255, 255, 0.16) 22%,
+          rgba(255, 255, 255, 0.03) 48%,
+          transparent 70%,
+          rgba(255, 255, 255, 0.1) 100%
+  );
+
+  pointer-events: none;
+}
+
+.add-button::after {
+  content: "";
+  position: absolute;
+  width: 75%;
+  height: 70%;
+  top: -42%;
+  left: 12%;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.2);
+  filter: blur(12px);
+
+  pointer-events: none;
+}
+
+.add-button > * {
+  position: relative;
+  z-index: 2;
 }
 
 .add-button span {
@@ -776,16 +881,29 @@
 .add-button:hover {
   transform: translateY(-1px);
 
-  border-color: #c9c4ec;
+  border-color: rgba(201, 196, 236, 0.72);
+
+  background: linear-gradient(
+          135deg,
+          rgba(245, 246, 255, 0.84),
+          rgba(251, 247, 255, 0.84)
+  );
 
   box-shadow:
-          0 5px 14px rgba(100, 100, 180, 0.08);
+          inset 0 1px 0 rgba(255, 255, 255, 0.95),
+          inset 0 0 18px rgba(255, 255, 255, 0.2),
+          0 7px 18px rgba(100, 100, 180, 0.12);
 }
 
+.add-button:active {
+  transform: scale(0.98);
 
-/* =========================================================
-   CONTENT POINTS
-   ========================================================= */
+  box-shadow:
+          inset 0 2px 6px rgba(100, 100, 180, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.7),
+          0 3px 9px rgba(100, 100, 180, 0.08);
+}
+
 
 .points-list {
   display: flex;
@@ -804,26 +922,72 @@
 
   align-items: center;
 }
-
 .point-number {
+  position: relative;
+
   width: 27px;
   height: 27px;
 
   display: grid;
   place-items: center;
 
-  border: 1px solid #e0e5ed;
+  border: 1px solid rgba(224, 229, 237, 0.55);
 
   border-radius: 50%;
 
-  background: #f8f9fc;
+  background: rgba(248, 249, 252, 0.72);
 
   color: #737f93;
 
   font-size: 10px;
   font-weight: 800;
+
+  overflow: hidden;
+
+  backdrop-filter: blur(16px) saturate(145%);
+  -webkit-backdrop-filter: blur(16px) saturate(145%);
+
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.82),
+          inset 0 0 10px rgba(255, 255, 255, 0.14),
+          0 4px 10px rgba(70, 80, 100, 0.06);
 }
 
+.point-number::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+
+  background: linear-gradient(
+          115deg,
+          rgba(255, 255, 255, 0.38) 0%,
+          rgba(255, 255, 255, 0.14) 25%,
+          transparent 65%,
+          rgba(255, 255, 255, 0.08) 100%
+  );
+
+  pointer-events: none;
+}
+
+.point-number::after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 65%;
+  top: -38%;
+  left: 15%;
+
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  filter: blur(9px);
+
+  pointer-events: none;
+}
+
+.point-number {
+  isolation: isolate;
+}
 .point-fields {
   display: grid;
 
@@ -929,6 +1093,8 @@
 }
 
 .stat-number {
+  position: relative;
+
   width: 25px;
   height: 25px;
 
@@ -937,14 +1103,59 @@
 
   border-radius: 8px;
 
-  background: #f1f3ff;
+  background: rgba(241, 243, 255, 0.72);
 
   color: #7077c6;
 
   font-size: 10px;
   font-weight: 800;
+
+  overflow: hidden;
+
+  backdrop-filter: blur(16px) saturate(145%);
+  -webkit-backdrop-filter: blur(16px) saturate(145%);
+
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.82),
+          inset 0 0 10px rgba(255, 255, 255, 0.14),
+          0 4px 10px rgba(90, 100, 170, 0.07);
 }
 
+.stat-number::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+
+  background: linear-gradient(
+          115deg,
+          rgba(255, 255, 255, 0.4) 0%,
+          rgba(255, 255, 255, 0.15) 24%,
+          transparent 65%,
+          rgba(255, 255, 255, 0.08) 100%
+  );
+
+  pointer-events: none;
+}
+
+.stat-number::after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 65%;
+  top: -38%;
+  left: 15%;
+
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  filter: blur(9px);
+
+  pointer-events: none;
+}
+
+.stat-number {
+  isolation: isolate;
+}
 .stat-fields {
   display: flex;
 
@@ -989,6 +1200,8 @@
 }
 
 .chart-icon {
+  position: relative;
+
   width: 34px;
   height: 34px;
 
@@ -997,18 +1210,63 @@
 
   border-radius: 10px;
 
-  background:
-          linear-gradient(
-                  135deg,
-                  #edf5ff,
-                  #f4efff
-          );
+  background: linear-gradient(
+          135deg,
+          rgba(237, 245, 255, 0.72),
+          rgba(244, 239, 255, 0.72)
+  );
 
   color: #7178c9;
 
   font-size: 17px;
+
+  overflow: hidden;
+
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.82),
+          inset 0 0 14px rgba(255, 255, 255, 0.16),
+          0 5px 14px rgba(90, 100, 170, 0.08);
 }
 
+.chart-icon::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+
+  background: linear-gradient(
+          115deg,
+          rgba(255, 255, 255, 0.4) 0%,
+          rgba(255, 255, 255, 0.15) 24%,
+          transparent 65%,
+          rgba(255, 255, 255, 0.1) 100%
+  );
+
+  pointer-events: none;
+}
+
+.chart-icon::after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  top: -40%;
+  left: 15%;
+
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  filter: blur(11px);
+
+  pointer-events: none;
+}
+
+.chart-icon i {
+  position: relative;
+  z-index: 2;
+}
 .chart-header strong {
   display: block;
 
@@ -1068,6 +1326,8 @@
 }
 
 .data-number {
+  position: relative;
+
   width: 25px;
   height: 25px;
 
@@ -1076,14 +1336,59 @@
 
   border-radius: 7px;
 
-  background: #f5f6f9;
+  background: rgba(245, 246, 249, 0.72);
 
   color: #7d8797;
 
   font-size: 10px;
   font-weight: 800;
+
+  overflow: hidden;
+
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.82),
+          inset 0 0 10px rgba(255, 255, 255, 0.14),
+          0 4px 10px rgba(70, 80, 100, 0.06);
 }
 
+.data-number::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+
+  background: linear-gradient(
+          115deg,
+          rgba(255, 255, 255, 0.38) 0%,
+          rgba(255, 255, 255, 0.14) 25%,
+          transparent 65%,
+          rgba(255, 255, 255, 0.08) 100%
+  );
+
+  pointer-events: none;
+}
+
+.data-number::after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 65%;
+  top: -38%;
+  left: 15%;
+
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  filter: blur(9px);
+
+  pointer-events: none;
+}
+
+.data-number {
+  isolation: isolate;
+}
 :host ::ng-deep .chart-data-row .p-inputtext {
   width: 100%;
 
@@ -1092,10 +1397,6 @@
   border-radius: 10px;
 }
 
-
-/* =========================================================
-   REMOVE CHART
-   ========================================================= */
 
 .remove-outline-button {
   height: 32px;
@@ -1175,27 +1476,71 @@
   display: grid;
   place-items: center;
 
-  border: 2px solid white;
+  border: 2px solid rgba(255, 255, 255, 0.9);
 
   border-radius: 50%;
 
-  background:
-          linear-gradient(
-                  135deg,
-                  #edf3ff,
-                  #f3edff
-          );
-
-  box-shadow:
-          0 0 0 1px #dfe4ef;
+  background: linear-gradient(
+          135deg,
+          rgba(237, 243, 255, 0.78),
+          rgba(243, 237, 255, 0.78)
+  );
 
   color: #7078c9;
 
   font-size: 10px;
-
   font-weight: 800;
+
+  overflow: hidden;
+
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.85),
+          inset 0 0 14px rgba(255, 255, 255, 0.16),
+          0 0 0 1px rgba(223, 228, 239, 0.65),
+          0 5px 14px rgba(80, 95, 150, 0.08);
 }
 
+.timeline-marker::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+
+  background: linear-gradient(
+          115deg,
+          rgba(255, 255, 255, 0.42) 0%,
+          rgba(255, 255, 255, 0.16) 25%,
+          transparent 65%,
+          rgba(255, 255, 255, 0.1) 100%
+  );
+
+  pointer-events: none;
+}
+
+.timeline-marker::after {
+  content: "";
+  position: absolute;
+
+  width: 70%;
+  height: 70%;
+
+  top: -38%;
+  left: 15%;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.2);
+  filter: blur(10px);
+
+  pointer-events: none;
+}
+
+.timeline-marker {
+  isolation: isolate;
+}
 .timeline-content {
   margin-bottom: 12px;
 
@@ -1234,31 +1579,72 @@
   margin-bottom: 8px;
 }
 
-
-/* =========================================================
-   IMAGE SELECTION
-   ========================================================= */
-
 .selected-badge {
+  position: relative;
   display: inline-flex;
-
   align-items: center;
+  justify-content: center;
+  gap: 5px;
 
   height: 28px;
-
   padding: 0 10px;
 
   border-radius: 999px;
 
-  background: #eef8f4;
+  background: rgba(238, 248, 244, 0.72);
+  border: 1px solid rgba(79, 148, 118, 0.28);
 
   color: #4f9476;
-
   font-size: 10px;
-
   font-weight: 800;
+
+  overflow: hidden;
+
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.82),
+          inset 0 0 14px rgba(255, 255, 255, 0.16),
+          0 5px 14px rgba(79, 148, 118, 0.08);
 }
 
+.selected-badge::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+
+  background: linear-gradient(
+          115deg,
+          rgba(255, 255, 255, 0.4) 0%,
+          rgba(255, 255, 255, 0.16) 24%,
+          transparent 65%,
+          rgba(255, 255, 255, 0.1) 100%
+  );
+
+  pointer-events: none;
+}
+
+.selected-badge::after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 75%;
+  top: -42%;
+  left: 15%;
+
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  filter: blur(12px);
+
+  pointer-events: none;
+}
+
+.selected-badge > * {
+  position: relative;
+  z-index: 2;
+}
 .image-grid {
   display: grid;
 

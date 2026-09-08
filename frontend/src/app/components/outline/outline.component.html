@@ -15,13 +15,14 @@
 
         </div>
 
-        <button
-                type="button"
-                class="back-button"
-                (click)="back()"
-        >
-            <i class="pi pi-arrow-left"></i> Back
-        </button>
+        <p-button
+                label="Back"
+                icon="pi pi-arrow-left"
+                [text]="true"
+                severity="secondary"
+                (onClick)="back()"
+                styleClass="header-btn glass-button"
+        />
 
     </div>
 
@@ -270,11 +271,6 @@
 
                 </div>
 
-
-                <!-- =================================================
-                     OBJECTIVE
-                     ================================================= -->
-
                 <div class="slide-section">
 
                     <div class="section-title-row">
@@ -304,12 +300,6 @@
                     ></textarea>
 
                 </div>
-
-
-                <!-- =================================================
-                     CONTENT POINTS
-                     ================================================= -->
-
                 <div class="slide-section">
 
                     <div class="section-title-row">
@@ -397,10 +387,6 @@
 
                 </div>
 
-
-                <!-- =================================================
-                     STATISTICS / KPIs
-                     ================================================= -->
 
                 <div class="slide-section">
 
@@ -496,11 +482,6 @@
                     }
 
                 </div>
-
-
-                <!-- =================================================
-                     CHART
-                     ================================================= -->
 
                 <div class="slide-section">
 
@@ -715,10 +696,6 @@
                 </div>
 
 
-                <!-- =================================================
-                     TIMELINE
-                     ================================================= -->
-
                 <div class="slide-section">
 
                     <div class="section-title-row">
@@ -825,11 +802,6 @@
 
                 </div>
 
-
-                <!-- =================================================
-                     IMAGE SELECTION
-                     ================================================= -->
-
                 @if (
                     slide.image_selection &&
                     slide.image_selection.candidates.length
@@ -858,7 +830,7 @@
                             @if (slide.image_selection.selected_url) {
 
                                 <span class="selected-badge">
-                                    <i class="pi pi-check"></i> Image selected
+                                    <i class="pi pi-check m-2"></i> Image selected
                                 </span>
 
                             }
@@ -976,20 +948,23 @@
 
     <div class="bottom-actions">
 
-        <button
+        <p-button
                 type="button"
-                class="secondary-action"
+                [text]="true"
+                severity="secondary"
+                styleClass="header-btn glass-button"
                 (click)="addSlide()"
                 [disabled]="loading"
         >
             <i class="pi pi-plus"></i> Add slide
-        </button>
+        </p-button>
 
 
 
-        <button
+        <p-button
                 type="button"
-                class="generate-button"
+                styleClass="regenerate-button glass-button"
+                severity="primary"
                 (click)="confirm()"
                 [disabled]="loading"
         >
@@ -1010,7 +985,7 @@
 
             }
 
-        </button>
+        </p-button>
 
     </div>
 

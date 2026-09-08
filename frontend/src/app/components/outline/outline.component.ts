@@ -19,18 +19,20 @@ import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
 import { InputText } from 'primeng/inputtext';
 import {PrimeTemplate} from "primeng/api";
+import {Button} from "primeng/button";
 
 @Component({
   selector: 'app-outline',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    Select,
-    Textarea,
-    InputText,
-    PrimeTemplate
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        Select,
+        Textarea,
+        InputText,
+        PrimeTemplate,
+        Button
+    ],
   templateUrl: './outline.component.html',
   styleUrl: './outline.component.css'
 })

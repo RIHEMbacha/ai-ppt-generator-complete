@@ -38,9 +38,10 @@
             </span>
                     </div>
 
-                    <button
-                            type="button"
-                            class="ai-badge"
+                    <p-button
+                            type="button" severity="secondary"
+                            styleClass="ai-badge header-btn glass-button
+                                       header-btn glass-button"
                             (click)="toggleDocumentMode()"
                             [disabled]="loading"
                     >
@@ -51,7 +52,7 @@
                         } @else {
                             Generate from document
                         }
-                    </button>
+                    </p-button>
                 </div>
 
                 <input
@@ -192,8 +193,9 @@
             <div class="generate-row ">
 
 
-                <button
-                        class="generate-button"
+                <p-button
+                        severity="primary"
+                        styleClass="regenerate-button glass-button"
                         (click)="generate()"
                         [disabled]="loading"
                 >
@@ -212,7 +214,7 @@
 
                     }
 
-                </button>
+                </p-button>
 
             </div>
 

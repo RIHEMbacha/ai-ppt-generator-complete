@@ -22,9 +22,6 @@
 
             </div>
 
-
-            <!-- HEADER ACTIONS -->
-
             <div class="header-actions">
 
                 <p-button
@@ -33,7 +30,7 @@
                         [text]="true"
                         severity="secondary"
                         (onClick)="back()"
-                        styleClass="header-btn"
+                        styleClass="header-btn glass-button"
                 />
 
                 <p-button
@@ -44,7 +41,7 @@
                         [loading]="exportingPDF"
                         [disabled]="exportingPDF"
                         (onClick)="export('pdf')"
-                        styleClass="header-btn"
+                        styleClass="header-btn glass-button"
                 />
 
                 <p-button
@@ -54,16 +51,14 @@
                         [loading]="exporting"
                         [disabled]="exporting"
                         (onClick)="export('pptx')"
-                        styleClass="header-btn export-btn"
+                        styleClass="header-btn export-btn glass-button"
                 />
 
             </div>
 
         </div>
 
-
         <div class="preview-layout">
-
 
             <aside class="slides-sidebar">
 
@@ -80,7 +75,6 @@
                     </div>
 
                 </div>
-
 
                 <div class="slides-list">
 
@@ -117,18 +111,10 @@
 
             </aside>
 
-
-            <!-- =================================================
-                 PREVIEW AREA
-                 ================================================= -->
-
             <main class="preview-workspace">
-
-
 
                 <div class="slide-preview-with-notes">
 
-                    <!-- SLIDE -->
                     <div class="slide-frame" #slideFrame>
 
                         @if (currentSlide) {
@@ -143,13 +129,13 @@
 
                             <div class="empty-slide">
 
-                <span class="empty-icon">
-                    <i class="pi pi-image"></i>
-                </span>
+                                <span class="empty-icon">
+                                    <i class="pi pi-image"></i>
+                                </span>
 
                                 <span>
-                    No slide selected
-                </span>
+                                    No slide selected
+                                </span>
 
                             </div>
 
@@ -157,9 +143,9 @@
 
                     </div>
 
-
                 </div>
-                <div class="slide-navigation ">
+
+                <div class="slide-navigation">
 
                     <p-button
                             label="Previous"
@@ -168,7 +154,7 @@
                             severity="secondary"
                             [disabled]="currentIndex === 0"
                             (onClick)="prev()"
-                            styleClass="navigation-btn"
+                            styleClass=" glass-button"
                     />
 
                     <div class="slide-counter">
@@ -195,15 +181,10 @@
                             severity="secondary"
                             [disabled]="currentIndex >= p.slides.length - 1"
                             (onClick)="next()"
-                            styleClass="navigation-btn"
+                            styleClass=" glass-button"
                     />
 
                 </div>
-
-
-                <!-- =================================================
-                     AI REGENERATION
-                     ================================================= -->
 
                 <div class="regeneration-card">
 
@@ -231,7 +212,6 @@
 
                     </div>
 
-
                     <div class="regeneration-form">
 
                         <div class="regen-input-wrapper">
@@ -251,24 +231,19 @@
 
                         </div>
 
-
                         <p-button
                                 label="Regenerate slide"
                                 icon="pi pi-sparkles"
+                                severity="primary"
                                 [loading]="regenerating"
                                 [disabled]="regenerating || !regenInstruction.trim()"
                                 (onClick)="regenerate()"
-                                styleClass="regenerate-button"
+                                styleClass="regenerate-button glass-button"
                         />
 
                     </div>
 
                 </div>
-
-
-                <!-- =================================================
-                     ERROR
-                     ================================================= -->
 
                 @if (error) {
 
@@ -287,6 +262,7 @@
                 }
 
             </main>
+
             @if (currentSlide?.notes) {
 
                 <aside class="presenter-notes-card">
@@ -298,8 +274,13 @@
                         </div>
 
                         <div>
-                            <strong>Presenter notes</strong>
-                            <span>Speaking guidance</span>
+                            <strong>
+                                Presenter notes
+                            </strong>
+
+                            <span>
+                                Speaking guidance
+                            </span>
                         </div>
 
                     </div>
@@ -317,10 +298,6 @@
     </section>
 
 } @else {
-
-    <!-- =========================================================
-         EMPTY STATE
-         ========================================================= -->
 
     <section class="empty-page">
 
@@ -341,6 +318,7 @@
             <p-button
                     label="Create presentation"
                     icon="pi pi-plus"
+                    styleClass="glass-button"
                     (onClick)="back()"
             />
 

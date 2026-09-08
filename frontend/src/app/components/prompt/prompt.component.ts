@@ -6,17 +6,19 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { ApiService } from '../../services/api.service';
 import { StateService } from '../../services/state.service';
+import {Button} from "primeng/button";
 
 @Component({
   selector: 'app-prompt',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TextareaModule,
-    InputNumberModule,
-    SelectModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TextareaModule,
+        InputNumberModule,
+        SelectModule,
+        Button
+    ],
   templateUrl: './prompt.component.html',
   styleUrl: './prompt.component.css',
 })
