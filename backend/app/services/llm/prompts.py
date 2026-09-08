@@ -1,73 +1,41 @@
 """System prompts and tone design systems for presentation generation."""
 
 from .constants import SLIDE_WIDTH, SLIDE_HEIGHT
+from app.config import settings
+
+
+TEMPLATE_INSPIRATION_URL = settings.TEMPLATE_INSPIRATION_URL
 
 
 TONE_DESIGN = {
     "professional": {
         "mood": "premium, corporate, trustworthy, polished",
         "palette_hint": "professional tones with one refined accent and strong readability",
-        "fonts": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
-        "title": "40–48px, weight 800, letter-spacing -0.5px",
-        "subtitle": "20–24px, weight 600",
-        "h3": "18–20px, weight 700",
-        "body": "16–18px, weight 400, line-height 1.5",
-        "caption": "13–14px, weight 500",
         "extras": "Charts, timelines, KPI cards, numbered steps, restrained decoration, clean accent details.",
     },
     "educational": {
         "mood": "clear, academic, calm, structured",
         "palette_hint": "calm academic tones with a clear primary color and restrained highlight color",
-        "fonts": "system-ui, Georgia, 'Times New Roman', serif for titles optional; body sans-serif",
-        "title": "38–46px, weight 800",
-        "subtitle": "20–22px, weight 600",
-        "h3": "18px, weight 700",
-        "body": "16–18px, weight 400, line-height 1.55",
-        "caption": "13px, weight 500",
         "extras": "Definitions, frameworks, process diagrams, numbered takeaways, clear hierarchy,Few decorative elements",
     },
     "startup": {
         "mood": "modern, ambitious, premium pitch deck",
         "palette_hint": "strong modern contrast with a vivid primary and distinctive accent",
-        "fonts": "system-ui, Inter, 'Segoe UI', sans-serif",
-        "title": "44–52px, weight 800, tight tracking",
-        "subtitle": "20–24px, weight 500",
-        "h3": "18–20px, weight 700",
-        "body": "16–17px, weight 400",
-        "caption": "12–13px, weight 500",
         "extras": "Big metrics, problem/solution cards, roadmap timelines, bold visual hierarchy, sparse text.",
     },
     "bold": {
         "mood": "energetic, high-impact, confident",
         "palette_hint": "strong high-contrast foundation with a vivid dominant color and complementary accent",
-        "fonts": "system-ui, heavy sans-serif weights",
-        "title": "48–56px, weight 900",
-        "subtitle": "22–26px, weight 700",
-        "h3": "20px, weight 700",
-        "body": "17–19px, weight 500",
-        "caption": "14px, weight 600",
         "extras": "Large statements, short bullets, impact statistics, strong structural elements, dynamic layouts.",
     },
     "minimal": {
         "mood": "quiet luxury, elegant, refined, spacious",
         "palette_hint": "restrained sophisticated tones with one subtle accent and generous contrast",
-        "fonts": "system-ui, 'Helvetica Neue', sans-serif",
-        "title": "36–42px, weight 600–700",
-        "subtitle": "18–20px, weight 400",
-        "h3": "16–18px, weight 600",
-        "body": "15–16px, weight 400, line-height 1.6",
-        "caption": "12–13px, weight 400",
         "extras": "Generous margins, few elements, elegant cards only when useful, restrained decoration.",
     },
     "funny": {
         "mood": "playful, friendly, energetic, informal",
         "palette_hint": "bright friendly combinations with multiple harmonious accents and strong readability",
-        "fonts": "system-ui, rounded feel; playful but readable",
-        "title": "42–50px, weight 800",
-        "subtitle": "20–24px, weight 600",
-        "h3": "18–20px, weight 700",
-        "body": "16–18px, weight 400",
-        "caption": "13–14px, weight 500",
         "extras": "Emoji sparingly, rounded cards, playful callouts, visual variety, less formal language.",
     },
 }
@@ -109,12 +77,6 @@ def tone_block(tone: str) -> str:
 TONE / DESIGN SYSTEM: "{key}"
 - Mood: {d['mood']}
 - Palette direction: {d['palette_hint']}
-- Font family: {d['fonts']}
-- Title: {d['title']}
-- Subtitle: {d['subtitle']}
-- Section header (h3): {d['h3']}
-- Body paragraph: {d['body']}
-- Caption: {d['caption']}
 - Style extras: {d['extras']}
 Use this system consistently for palette choice and visual hierarchy.
 """
@@ -219,7 +181,7 @@ OUTPUT SCHEMA
         }
       ],
       "layout_hint": "title | agenda | content | big-stats | chart-focus | timeline | comparison | two-column | cards-2x2 | numbered-takeaways | closing",
-      "image_query": "2-5 concrete visual search keywords "
+      "image_query": "2-5 concrete visual search keywords or empty string "
     }
   ]
 }
@@ -545,6 +507,11 @@ DESIGN
 
 Use the selected palette exactly.
 
+DESIGN REFERENCE
+
+Take visual inspiration from the handcrafted HTML presentation templates in
+{TEMPLATE_INSPIRATION_URL}.
+
 The selected palette contains:
 - bg
 - surface
@@ -619,8 +586,12 @@ Points:
 Render supplied points and explanations clearly.
 
 Selected image:
-If selected_url exists, use that exact URL.
-If it does not exist, do not invent an image URL.
+If selected_url exists, it is mandatory visual content: use that exact URL in a
+visible <img> or CSS background-image within the slide design.
+Never omit, replace, hide, crop away completely, or merely mention a supplied
+selected_url. Integrate it intentionally into the composition, with an overlay
+or container when needed to preserve text readability.
+If selected_url does not exist, do not invent an image URL.
 
 BODY LIMIT
 
@@ -657,11 +628,16 @@ Rules:
 - HTML under 1800 characters
 - preserve supplied content
 - use only the selected palette
+- take inspiration from the handcrafted, editorial HTML presentation style of
+  {TEMPLATE_INSPIRATION_URL}
 - do not invent information
 - use strong visual hierarchy
 - use designed backgrounds instead of flat backgrounds
 - use subtle gradients, patterns, geometric shapes or layered surfaces
 - use high-contrast containers when imagery is present
+- if a selected_url is supplied, it MUST be visibly rendered using that exact
+  URL and integrated into the slide composition; it may not be omitted or
+  replaced
 - title slide: title + subtitle + presenters
 - closing slide: conclusion + thank-you
 """
@@ -687,11 +663,21 @@ Rules:
 - never invent sources
 - use the supplied palette when available
 - do not introduce unrelated colors
+- preserve an original, handcrafted editorial presentation feel inspired by
+  {TEMPLATE_INSPIRATION_URL}
 - keep the selected visual identity
 - improve hierarchy, spacing and composition
 - use designed backgrounds
 - use gradients, patterns, geometric shapes or layered surfaces when appropriate
 - use readable overlays for image backgrounds
+- if a selected_url is supplied, it MUST be visibly rendered using that exact
+  URL and integrated into the slide composition; do not omit, hide, replace,
+  or reduce it to non-visible markup
+- preserve every image already present in the supplied current slide HTML,
+  including its exact URL, unless the user's instruction explicitly asks to
+  remove or replace that image
+- when preserving an image, keep it visibly rendered in the regenerated HTML;
+  do not silently discard it while changing the layout
 - all CSS inline
 - root exactly {SLIDE_WIDTH}x{SLIDE_HEIGHT}
 - HTML under 2800 characters

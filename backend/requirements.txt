@@ -16,8 +16,6 @@ httpx==0.27.0
 google-genai
 huggingface_hub>=0.26.0
 azure-identity>=1.17.1
-microsoft-kiota-abstractions>=1.8.4
-microsoft-agents-m365copilot>=0.2.0
 Werkzeug
 openai
 playwright

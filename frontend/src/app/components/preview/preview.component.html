@@ -41,8 +41,8 @@
                         icon="pi pi-file-pdf"
                         [outlined]="true"
                         severity="secondary"
-                        [loading]="exporting"
-                        [disabled]="exporting"
+                        [loading]="exportingPDF"
+                        [disabled]="exportingPDF"
                         (onClick)="export('pdf')"
                         styleClass="header-btn"
                 />
@@ -55,17 +55,6 @@
                         [disabled]="exporting"
                         (onClick)="export('pptx')"
                         styleClass="header-btn export-btn"
-                />
-
-                <p-button
-                        label="Export HTML"
-                        icon="pi pi-code"
-                        [outlined]="true"
-                        severity="secondary"
-                        [loading]="exporting"
-                        [disabled]="exporting"
-                        (onClick)="export('html')"
-                        styleClass="header-btn"
                 />
 
             </div>

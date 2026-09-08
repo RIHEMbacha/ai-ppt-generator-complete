@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     OPENROUTER_MODEL: str = "openai/gpt-4o"
     OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
 
+    TEMPLATE_INSPIRATION_URL: str = "https://github.com/zarazhangrui/beautiful-html-templates"
+
     # Azure OpenAI
     AZURE_OPENAI_ENDPOINT: str = ""
     AZURE_OPENAI_API_KEY: str = ""

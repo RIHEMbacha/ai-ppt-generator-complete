@@ -4,6 +4,11 @@ import io
 import re
 
 from app.models import Presentation
+from app.services.llm.constants import SLIDE_HEIGHT, SLIDE_WIDTH
+
+
+PDF_WIDTH = f"{SLIDE_WIDTH / 96:.3f}in"
+PDF_HEIGHT = f"{SLIDE_HEIGHT / 96:.3f}in"
 
 
 async def export_presentation(
@@ -60,8 +65,8 @@ async def _export_pdf(pres: Presentation) -> bytes:
 
         page = await browser.new_page(
             viewport={
-                "width": 1600,
-                "height": 900,
+                "width": SLIDE_WIDTH,
+                "height": SLIDE_HEIGHT,
             },
             device_scale_factor=1,
         )
@@ -110,8 +115,8 @@ async def _export_pdf(pres: Presentation) -> bytes:
         await page.wait_for_timeout(100)
 
         pdf_bytes = await page.pdf(
-            format="A4",
-            landscape=True,
+            width=PDF_WIDTH,
+            height=PDF_HEIGHT,
 
             # Very important:
             # preserve the CSS colors/backgrounds.
@@ -180,7 +185,7 @@ def _build_pdf_document(pres: Presentation) -> str:
 <style>
 
 @page {{
-    size: 16:9;
+    size: {PDF_WIDTH} {PDF_HEIGHT};
     margin: 0;
 }}
 
@@ -196,8 +201,8 @@ body {{
 }}
 
 .slide {{
-    width: 1600px;
-    height: 900px;
+    width: {SLIDE_WIDTH}px;
+    height: {SLIDE_HEIGHT}px;
 
     position: relative;
 
@@ -216,8 +221,8 @@ body {{
 }}
 
 .empty-slide {{
-    width: 1600px;
-    height: 900px;
+    width: {SLIDE_WIDTH}px;
+    height: {SLIDE_HEIGHT}px;
 
     display: flex;
     align-items: center;
@@ -287,8 +292,8 @@ async def _export_pptx(pres: Presentation) -> bytes:
 
         page = await browser.new_page(
             viewport={
-                "width": 1600,
-                "height": 900,
+                "width": SLIDE_WIDTH,
+                "height": SLIDE_HEIGHT,
             },
             device_scale_factor=2,
         )
@@ -296,8 +301,8 @@ async def _export_pptx(pres: Presentation) -> bytes:
         prs = PptxPresentation()
 
         # 16:9
-        prs.slide_width = Inches(13.333)
-        prs.slide_height = Inches(7.5)
+        prs.slide_width = Inches(SLIDE_WIDTH / 96)
+        prs.slide_height = Inches(SLIDE_HEIGHT / 96)
 
         blank_layout = prs.slide_layouts[6]
 
@@ -308,8 +313,8 @@ async def _export_pptx(pres: Presentation) -> bytes:
             if not slide_html.strip():
                 slide_html = f"""
                 <div style="
-                    width:1600px;
-                    height:900px;
+                    width:{SLIDE_WIDTH}px;
+                    height:{SLIDE_HEIGHT}px;
                     display:flex;
                     align-items:center;
                     justify-content:center;
@@ -411,15 +416,15 @@ body {{
     margin: 0;
     padding: 0;
 
-    width: 1600px;
-    height: 900px;
+    width: {SLIDE_WIDTH}px;
+    height: {SLIDE_HEIGHT}px;
 
     overflow: hidden;
 }}
 
 body {{
-    width: 1600px;
-    height: 900px;
+    width: {SLIDE_WIDTH}px;
+    height: {SLIDE_HEIGHT}px;
 }}
 
 * {{

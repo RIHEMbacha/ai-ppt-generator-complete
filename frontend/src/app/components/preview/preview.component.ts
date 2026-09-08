@@ -31,6 +31,8 @@ export class PreviewComponent implements OnInit, AfterViewChecked {
   regenInstruction = '';
   regenerating = false;
   exporting = false;
+  exportingPDF = false;
+
   error = '';
   scale = 1;
   private needsScale = true;
@@ -103,38 +105,39 @@ export class PreviewComponent implements OnInit, AfterViewChecked {
     this.regenerating = true;
     this.error = '';
     const instruction =
-      this.regenInstruction.trim() ||
-      'Improve the visual design while keeping the same content.';
+        this.regenInstruction.trim() ||
+        'Improve the visual design while keeping the same content.';
 
     this.api
-      .regenerateSlide({
-        title: p.title,
-        subtitle: p.subtitle || '',
-        current_html: slide.html,
-        instruction,
-        tone: this.state.tone(),
-        palette: p.palette,
-      })
-      .subscribe({
-        next: (updated) => {
-          const slides = [...p.slides];
-          slides[this.currentIndex] = { ...slide, ...updated };
-          this.state.setPresentation({ ...p, slides });
-          this.state.currentSlideIndex.set(this.currentIndex);
-          this.needsScale = true;
-          this.regenerating = false;
-        },
-        error: (err) => {
-          this.error = err?.error?.detail || err?.message || 'Regenerate failed';
-          this.regenerating = false;
-        },
-      });
+        .regenerateSlide({
+          title: p.title,
+          subtitle: p.subtitle || '',
+          current_html: slide.html,
+          instruction,
+          tone: this.state.tone(),
+          palette: p.palette,
+        })
+        .subscribe({
+          next: (updated) => {
+            const slides = [...p.slides];
+            slides[this.currentIndex] = { ...slide, ...updated };
+            this.state.setPresentation({ ...p, slides });
+            this.state.currentSlideIndex.set(this.currentIndex);
+            this.needsScale = true;
+            this.regenerating = false;
+          },
+          error: (err) => {
+            this.error = err?.error?.detail || err?.message || 'Regenerate failed';
+            this.regenerating = false;
+          },
+        });
   }
 
   export(fmt: 'pptx' | 'pdf' | 'html') {
     const p = this.presentation;
     if (!p) return;
-    this.exporting = true;
+    this.exporting = fmt === 'pptx';
+    this.exportingPDF = fmt === 'pdf';
     this.error = '';
 
     this.api.export(p, fmt).subscribe({
@@ -147,10 +150,12 @@ export class PreviewComponent implements OnInit, AfterViewChecked {
         a.click();
         URL.revokeObjectURL(url);
         this.exporting = false;
+        this.exportingPDF = false;
       },
       error: (err) => {
         this.error = err?.error?.detail || err?.message || 'Export failed';
         this.exporting = false;
+        this.exportingPDF = false;
       },
     });
   }
