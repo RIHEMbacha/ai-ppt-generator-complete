@@ -1,35 +1,66 @@
 # AI Presentation Generator v2
 
-**Two-phase AI presentation system** (backend + frontend)
+**AI-powered presentation generator built with Angular, Python, and Azure AI Foundry.**
 
-```
+Create presentations from a simple prompt or an uploaded document.
+
+👉 **Try it:** https://ai-ppt-frontend.salmonpebble-6f51f89d.swedencentral.azurecontainerapps.io/prompt
+
+```text
 1. OUTLINE   →  AI plans what each slide should show
 2. CONFIRM   →  You review / edit the plan
-3. DESIGN    →  AI generates HTML for each slide independently
+3. DESIGN    →  AI generates each slide independently
 4. EXPORT    →  PPTX or HTML
 ```
 
 ## Project structure
 
-```
+```text
 ai-ppt-generator/
-├── backend/                 # FastAPI (Python)
+├── backend/                 # Python / FastAPI
 │   ├── app/
 │   │   ├── main.py          # API routes
 │   │   ├── config.py
 │   │   ├── models.py
 │   │   └── services/
-│   │       ├── llm.py       # Outline agent + per-slide HTML agent (with retries)
+│   │       ├── llm.py       # AI generation
 │   │       ├── parser.py
 │   │       └── exporter.py
 │   ├── requirements.txt
 │   └── .env.example
-├── frontend/                # Static SPA (no build step)
-│   ├── index.html
-│   ├── css/styles.css
-│   └── js/app.js
+│
+├── frontend/                # Angular application
+│   ├── src/
+│   ├── angular.json
+│   ├── package.json
+│   └── ...
+│
+├── Dockerfile
 └── README.md
 ```
+
+## Technologies
+
+| Part       | Technologies                                                     |
+| ---------- | ---------------------------------------------------------------- |
+| Frontend   | Angular, TypeScript, HTML, CSS                                   |
+| Backend    | Python, FastAPI                                                  |
+| AI         | Azure AI Foundry, Gemini, Groq, OpenRouter, Ollama, Hugging Face |
+| Deployment | Microsoft Azure, Azure Container Apps, Docker                    |
+| Registry   | Azure Container Registry                                         |
+
+## Two-phase flow
+
+| Step | What happens                                        |
+| ---- | --------------------------------------------------- |
+| 1    | AI creates a structured presentation outline        |
+| 2    | You review and edit the slides                      |
+| 3    | AI generates the design of each slide independently |
+| 4    | The presentation can be exported as PPTX or HTML    |
+
+## AI Models
+
+The project supports multiple AI providers and can use models available through **Azure AI Foundry**, as well as other providers such as Gemini, Groq, OpenRouter, Ollama, and Hugging Face.
 
 ## Quick start
 
@@ -46,45 +77,58 @@ python -m venv .venv
 source .venv/bin/activate
 
 pip install -r requirements.txt
-copy .env .env     # Windows  (or: cp .env .env)
-
-# Edit .env:
-#   LLM_PROVIDER=gemini
-#   GEMINI_API_KEY=AIzaSy...     ← must start with AIza
-#   GEMINI_MODEL=gemini-2.5-flash
-#   CORS_ORIGINS=http://localhost:3000,http://localhost:4200
 
 uvicorn app.main:app --reload --port 8000
 ```
 
-Backend: http://127.0.0.1:8000  
-Health:  http://127.0.0.1:8000/api/health
+Backend:
+
+```text
+http://127.0.0.1:8000
+```
+
+Health:
+
+```text
+http://127.0.0.1:8000/api/health
+```
 
 ### 2. Frontend
 
 ```bash
 cd frontend
-python -m http.server 3000
+npm install
+ng serve
 ```
 
-Open: **http://localhost:3000**
+Open:
 
-## Two-phase flow
+```text
+http://localhost:4200
+```
 
-| Step | Endpoint | What happens |
-|------|----------|--------------|
-| 1 | POST /api/outline | AI creates content plan (no HTML yet) |
-| 2 | (UI) | You edit labels, content, order |
-| 3 | POST /api/generate-html | One independent design prompt per slide + auto-retry |
-| 4 | POST /api/export | Download PPTX or HTML |
+## Azure
 
-## LLM providers
+The application is deployed on **Microsoft Azure** using **Azure Container Apps**.
 
-| Provider | Env key | Notes |
-|----------|---------|-------|
-| gemini (recommended) | GEMINI_API_KEY | Best free quality |
-| groq | GROQ_API_KEY | Very fast |
-| ollama | local | Fully offline |
-| huggingface | HF_TOKEN | Free, smaller models |
+The backend uses AI models through **Azure AI Foundry**, while the Angular frontend is deployed separately as a web application.
 
-Get Gemini key: https://aistudio.google.com/app/apikey (must start with AIza)
+```text
+Angular
+   │
+   ▼
+Azure Container Apps
+   │
+   ▼
+Python / FastAPI
+   │
+   ▼
+Azure AI Foundry
+   │
+   ▼
+AI Models
+```
+
+## Live Demo
+
+**https://ai-ppt-frontend.salmonpebble-6f51f89d.swedencentral.azurecontainerapps.io/prompt**
