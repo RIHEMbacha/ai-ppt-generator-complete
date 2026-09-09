@@ -10,7 +10,8 @@ Create presentations from a simple prompt or an uploaded document.
 1. OUTLINE   →  AI plans what each slide should show
 2. CONFIRM   →  You review / edit the plan
 3. DESIGN    →  AI generates each slide independently
-4. EXPORT    →  PPTX or HTML
+4. PRESENT   →  Present fullscreen while reading your notes
+5. EXPORT    →  PPTX or HTML
 ```
 
 ## Project structure
@@ -51,12 +52,25 @@ ai-ppt-generator/
 
 ## Two-phase flow
 
-| Step | What happens                                        |
-| ---- | --------------------------------------------------- |
-| 1    | AI creates a structured presentation outline        |
-| 2    | You review and edit the slides                      |
-| 3    | AI generates the design of each slide independently |
-| 4    | The presentation can be exported as PPTX or HTML    |
+| Step | What happens                                          |
+| ---- | ----------------------------------------------------- |
+| 1    | AI creates a structured presentation outline          |
+| 2    | You review and edit the slides                        |
+| 3    | AI generates the design of each slide independently   |
+| 4    | Present the slides in fullscreen with presenter notes |
+| 5    | Export the presentation as PPTX or HTML               |
+
+## Presentation Mode
+
+The application includes a presentation mode designed for real presentations.
+
+* 🖥️ Present slides in fullscreen
+* 📝 Read your presenter notes while presenting
+* 🎤 Keep your notes visible to you while presenting
+* 🔒 Your notes are not included in the shared presentation screen
+* 🔄 Navigate between slides while keeping the presentation view separate
+
+This makes it possible to **share your presentation screen without sharing your presenter notes** during a meeting or online presentation.
 
 ## AI Models
 
@@ -111,7 +125,7 @@ http://localhost:4200
 
 The application is deployed on **Microsoft Azure** using **Azure Container Apps**.
 
-The backend uses AI models through **Azure AI Foundry**, while the Angular frontend is deployed separately as a web application.
+The backend uses AI models through **Azure AI Foundry**, while the Angular frontend is deployed separately.
 
 ```text
 Angular
