@@ -10,7 +10,8 @@ Create presentations from a simple prompt or an uploaded document.
 1. OUTLINE   →  AI plans what each slide should show
 2. CONFIRM   →  You review / edit the plan
 3. DESIGN    →  AI generates each slide independently
-4. PRESENT   →  Present fullscreen while reading your notes
+4. PRESENT   →  Present fullscreen while reading your notes * 🔒 Your notes are not included in the shared presentation screen
+
 5. EXPORT    →  PPTX or HTML
 ```
 
@@ -59,18 +60,6 @@ ai-ppt-generator/
 | 3    | AI generates the design of each slide independently   |
 | 4    | Present the slides in fullscreen with presenter notes |
 | 5    | Export the presentation as PPTX or HTML               |
-
-## Presentation Mode
-
-The application includes a presentation mode designed for real presentations.
-
-* 🖥️ Present slides in fullscreen
-* 📝 Read your presenter notes while presenting
-* 🎤 Keep your notes visible to you while presenting
-* 🔒 Your notes are not included in the shared presentation screen
-* 🔄 Navigate between slides while keeping the presentation view separate
-
-This makes it possible to **share your presentation screen without sharing your presenter notes** during a meeting or online presentation.
 
 ## AI Models
 
