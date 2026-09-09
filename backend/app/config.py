@@ -3,7 +3,7 @@ from typing import List
 
 
 class Settings(BaseSettings):
-    LLM_PROVIDER: str = "gemini"
+    LLM_PROVIDER: str = ""
 
     # Gemini
     GEMINI_API_KEY: str = ""
@@ -23,7 +23,8 @@ class Settings(BaseSettings):
     # Azure OpenAI
     AZURE_OPENAI_ENDPOINT: str = ""
     AZURE_OPENAI_API_KEY: str = ""
-    AZURE_OPENAI_DEPLOYMENT: str = ""
+    AZURE_OPENAI_model4: str = ""
+    AZURE_OPENAI_model5: str = ""
     AZURE_OPENAI_API_VERSION: str = "v1"
 
     # Ollama

@@ -12,9 +12,8 @@ from app.models import (
     ImageSelection,
     ImageCandidate,
 )
-from .constants import SLIDE_WIDTH, SLIDE_HEIGHT
-from .html_utils import fallback_html, normalize_slide_html, truncate
-from .photos import inject_background, resolve_slide_background,rank_images,search_pexels_candidates
+from .html_utils import normalize_slide_html, truncate
+from .photos import rank_images,search_pexels_candidates
 from .prompts import (
     OUTLINE_DOCUMENT_SYSTEM,
     OUTLINE_SYSTEM,

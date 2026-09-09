@@ -8,15 +8,6 @@ logger = logging.getLogger("llm")
 
 
 def extract_json(raw: str) -> dict:
-    """Extract the first valid JSON object/array from a raw LLM response.
-
-    Strategy:
-    - Strip ```json blocks if present.
-    - Look for the first { or [ and then scan forward with a simple lexer
-      that respects string quoting and escaping to find the matching closing
-      bracket/brace. This avoids failing on extra trailing commentary.
-    - Fall back to previous heuristics if needed.
-    """
     raw = (raw or "").strip()
 
     if "```" in raw:
@@ -26,7 +17,6 @@ def extract_json(raw: str) -> dict:
         else:
             raw = raw.replace("```json", "").replace("```", "").strip()
 
-    # Find first JSON opening char
     idx = None
     for i, ch in enumerate(raw):
         if ch in "[{":
@@ -38,7 +28,6 @@ def extract_json(raw: str) -> dict:
     opener = raw[idx]
     closer = '}' if opener == '{' else ']'
 
-    # Scan forward to find the matching closer while respecting strings and escapes
     depth = 0
     in_string = False
     escape = False
@@ -73,16 +62,13 @@ def extract_json(raw: str) -> dict:
         try:
             return json.loads(candidate)
         except json.JSONDecodeError:
-            # If direct loads failed, try JSONDecoder.raw_decode on the remainder
             try:
                 decoder = json.JSONDecoder()
                 obj, end = decoder.raw_decode(raw[idx:])
                 return obj
             except Exception:
-                # fall through to heuristics below
                 pass
 
-    # Additional robust attempt: use JSONDecoder to parse the first value and ignore trailing data
     try:
         decoder = json.JSONDecoder()
         obj, end = decoder.raw_decode(raw[idx:])
@@ -90,7 +76,6 @@ def extract_json(raw: str) -> dict:
     except Exception:
         pass
 
-    # Heuristic fallbacks (best-effort attempts similar to previous logic)
     start = raw.find('{')
     if start != -1:
         end = raw.rfind('}')
@@ -100,7 +85,6 @@ def extract_json(raw: str) -> dict:
             except json.JSONDecodeError:
                 pass
 
-    # Try to balance quotes/brackets/braces minimally and parse
     start = raw.find('{')
     if start == -1:
         raise ValueError("No JSON object found in LLM response")

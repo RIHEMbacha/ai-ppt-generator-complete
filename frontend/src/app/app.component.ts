@@ -20,7 +20,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.api.health().subscribe({
       next: (h) => {
-        this.healthLabel = `${h.provider} · ${h.model || 'ok'}`;
+        console.log(h)
+        this.healthLabel = `${h.provider} · ${h.azure_openai_5.used +' '+h.azure_openai_5.remaining || 'ok'}`;
         this.healthOk = true;
       },
       error: () => {

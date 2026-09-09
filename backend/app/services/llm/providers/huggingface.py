@@ -1,16 +1,4 @@
-"""
-Hugging Face Inference Providers — Chat Completion
 
-Official docs:
-  https://huggingface.co/docs/inference-providers/en/tasks/chat-completion
-
-Uses the OpenAI-compatible client against:
-  base_url = https://router.huggingface.co/v1
-
-Model id can include a provider suffix, e.g.:
-  Qwen/Qwen2.5-7B-Instruct:hf-inference
-  meta-llama/Meta-Llama-3-8B-Instruct:together
-"""
 
 from __future__ import annotations
 
