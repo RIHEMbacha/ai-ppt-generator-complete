@@ -178,6 +178,24 @@
     background: #ef6f79;
 }
 
+.github-badge {
+    display: inline-flex;
+    align-items: center;
+
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.github-badge:hover,
+.github-badge:focus-visible {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
+
+.github-badge img {
+    display: block;
+    height: 20px;
+}
+
 .app-content {
     position: relative;
     z-index: 2;

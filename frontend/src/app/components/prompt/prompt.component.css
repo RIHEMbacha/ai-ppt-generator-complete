@@ -587,6 +587,12 @@
         align-items: flex-start;
     }
 
+    .ai-badge {
+        gap: 4px;
+        padding: 7px 9px;
+        font-size: 10px;
+    }
+
     .options-grid {
         grid-template-columns: 1fr;
         gap: 11px;
@@ -607,6 +613,12 @@
 
     .document-drop-zone {
         min-height: 160px;
+    }
+}
+
+@media (max-width: 767px) {
+    :host ::ng-deep .ai-badge-text {
+        font-size: 8px !important;
     }
 }
 
@@ -658,4 +670,3 @@
         min-height: 155px;
     }
 }
-
