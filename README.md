@@ -1,4 +1,4 @@
-# AI Presentation Generator v2
+# AI Presentation Generator v2 new
 
 **AI-powered presentation generator built with Angular, Python, and Azure AI Foundry.**
 
